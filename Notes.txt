@@ -1,0 +1,86 @@
+https://www.youtube.com/watch?v=YS4e4q9oBaU
+
+⭐️ Course Contents ⭐️
+⌨️ (0:00:00) Introduction
+⌨️ (0:16:57) Setting Up a Development Environment
+⌨️ (0:35:48) Variables
+⌨️ (0:57:05) Primitives
+⌨️ (1:26:29) Constants
+⌨️ (1:47:53) Arrays and Slices
+⌨️ (2:17:20) Maps and Structs
+⌨️ (2:48:00) If and Switch Statements
+⌨️ (3:21:17) Looping
+⌨️ (3:41:34) Defer, Panic, and Recover
+⌨️ (4:03:57) Pointers
+⌨️ (4:21:30) Functions
+⌨️ (4:57:59) Interfaces
+⌨️ (5:33:57) Goroutines
+⌨️ (6:05:10) Channels
+
+Introduction
+------------
+
+Go was created by Google to address certain limitations of some of the main languages that they already use.
+
+    Python: Easy to use but interpreted and slow.
+
+    Java: Fast but an increasingly complicated type system.
+
+    C/C++: Complex type system and slow compile time. Compilers are made to optimize a minimum amount of RAM.
+
+All three of the above languages were created when multithreaded applications were rare. Concurrency patterns
+in the above languages were later patched in.
+
+What does go offer?
+
+    Strong and statically typed just like Java/C++.
+
+        Strong typing means that variable types cannot change over time.
+
+        Static typing means that all the variables have to be defined at compile time.
+
+        There are ways around the type system but 99% of the time Go is strong and statically typed.
+
+        Unlike the above languages go has type inference so it does not need to be as verbose.
+
+    Simplicity as a feature. A lot of the features we might be used to in other languages do not exist
+    in Go.
+
+        Go favors simplicity over complexity and this inevitably leads to features being left out.
+
+    Fast compile times. Write -> Build -> Test process is fast and we can get feedback as quickly as possible.
+
+    Garbage collection. We do not have to manage memory with go. We can manage our own memory but the Go runtime
+    will handle this for us by default.
+
+        Recent versions of Go have improved the performance of the garbage collector further.
+
+    Built in concurrency. No external packages required.
+
+    Go compiles down to a standalone binary. Everything needed is bundled into a single binary. The runtime, 
+    libraries etc are all included. Version management at runtime is easy.
+
+Some useful resources on the Go website...
+
+    A playground: https://go.dev/play/
+
+    A guide to structuring and best practices: https://go.dev/doc/effective_go
+
+    Standard Library documentation: https://pkg.go.dev/std
+
+        Not much for GUI applications at this point. Go is mostly focused on CLI, servers and web applications.
+
+The basic format for a simple Go application is as follows...
+
+    package main
+
+    import "fmt"
+
+    func main() {
+        fmt.Println("Hello, 世界")
+    }
+
+Every application is structured into packages. We need to declare what package each file is a part of using the
+'package' statement. The main package is the entry point to any Go application.
+
+We import libraries using the 'import' statement. The "fmt" package allows us to format strings.
