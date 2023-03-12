@@ -229,3 +229,162 @@ don't know how Go works.
         bytes making up the string as well as an int representing the length of the string in bytes.
 
     The "strconv" package has a lot of useful functionality for string conversions with other data types.
+
+
+Primitives
+----------
+
+Go has three groups of primitive types, Boolean, Numeric and Text types.
+
+Booleans are useful as state flags and for logical tests.
+
+    When declaring a boolean and not initializing it the value is 0 and 0 evaluates to false. This is true of
+    all primitives in Go. When we declare them but do not initialize them they have a default 0 value.
+
+        var n bool, n will be equal to false
+
+There are many different types of integers. The first type are the signed integers and there are many different
+types for these.
+
+    The int type is a signed integer of unspecified size. The size is unspecified since it depends on the
+    system environment. It is at least 32bit but can be 64 or 128 depending on the system. This is the default
+    integer type.
+
+    Signed integer ranges...
+
+        int8: -128, 127
+        int16: -32768, 32767
+        // A little over 2 billion
+        int32: -2147483648, 2147483647
+        // About 9.223 Quintillion
+        int64: -9223372036854775808, 9223372036854775807
+
+    Unsigned integers
+
+        uint8: 0, 255
+        uint16: 0, 65535
+        uint32: 0, 4294967295
+
+    There is also the 'byte' type which is an alias for uint8 and 'rune' which is an alias for int32.
+
+Go has the standard numeric operators...
+
+	fmt.Println(b + c)
+	fmt.Println(b - c)
+	fmt.Println(b * c)
+	fmt.Println(b / c)
+	fmt.Println(b % c)
+
+For the division operator if we are dividing int and float the result is always an int. We cannot perform operations
+on different types. Ie we cannot add a int8 to a int32. We have to do type conversion first.
+
+Go has bit operators as well...
+
+    fmt.Println(b & c) And
+	fmt.Println(b | c) Or
+	fmt.Println(b ^ c) Exclusive Or (XOR)
+	fmt.Println(b &^ c) And not
+
+    See the code for explanations
+
+Go has bitshift operators...
+
+    a := 8
+    a << 3 Will shift a left 3 places
+    a >> 3 Will shift a right 3 places
+
+There are different ways to define floating point numbers in Go...
+
+    var n float64 = 3.14
+    n := 3.14
+    n = 13.7e72
+    n = 2.1E14
+
+    We cannot do operations between float32 and float64. So if we are working with very large numbers always use 
+    float64.
+
+    Scientific notation can be declared with a 'E' or 'e'
+
+        2.1e14 = 2.4 * 10^14
+        2.1E14 = 2.4 * 10^14
+
+    Floats have the following operators, there is no % operator and no bitwise or shifting operators!
+
+        fmt.Println(b + c)
+        fmt.Println(b - c)
+        fmt.Println(b * c)
+        fmt.Println(b / c)
+
+Go has a complex type for numbers. There is a complex64 and complex128 type.
+
+    A complex number is a number that can be expressed in the form a + bi, where a and b are real numbers and i is the 
+    imaginary unit, which is defined as the square root of -1. In this expression, a is called the real part of the 
+    complex number, and b is called the imaginary part.
+
+    When working with complex numbers we may want to pull out the real or imaginary patterns
+
+        The real() function will pull out the real part and the imag() will pull out the imaginary part.
+
+	    var g complex64 = 1 + 2i
+        fmt.Printf("%v, %T\n", real(a), real(a)) // 1, float32
+        fmt.Printf("%v, %T\n", imag(a), imag(a)) // 2, float32
+
+        We can create a complex number using complex()
+
+            var g complex128 = complex(5, 12);
+            // (5+12i), complex128
+
+    We can use the + - * and / operators on complex numbers. + and - work just how we would expect. But remember from
+    math classes how we use the distributive property of multiplication...
+
+        z1 := complex(2, 3) // 2 + 3i
+        z2 := complex(4, 5) // 4 + 5i
+        z1 * z2
+        = (2 + 3i) * (4 + 5i)          // Distributive property of multiplication
+        = 2 * 4 + 2 * 5i + 3i * 4 + 3i * 5i
+        = 8 + 10i + 12i + 15i^2        // Simplify the products of the imaginary unit i
+        = 8 + 22i - 15                 // Substitute i^2 with -1
+        = -7 + 22i
+
+Text in go falls into two basic categories...
+
+    Strings in Go are composed of any UTF-8 characters. This is powerful but means strings cannot encode every type
+    of character available.
+
+        Strings can be treated like an array as a collection of letters...
+
+            s := "this is string"
+            s[2] // returns the value 105 of uint8 type
+
+        Strings in Go are just aliases for bytes.
+
+        Strings are generally immutable. The individual chars cannot be changed. We can use the + operator to
+        concatenate strings.
+
+        s := "this is "
+        s2 := "a string"
+        s + s2
+
+        Strings can be converted to collections or slices of bytes. Slices are like dynamic arrays. The array type
+        in go is static and therefor of a fixed length.
+
+            A lot of functions in Go work with byte slices. This makes them more flexible than hard coded strings.
+
+    A Rune type represents any UTF-32 character whereas a Sting type represents any UTF-8 character.
+
+        UTF-8 is a variable length encoding system that can represent any Unicode code point (character) using 
+        one to four 8-bit bytes. The byte type in Go is a uint8. The byte type is an alias of uint8.
+
+        UTF-32 assigns a 32-bit value to every Unicode code point. Every code point is represent by a 32-bit
+        value as opposed to one to four 8bit bytes as in UTF-8
+
+        Runes are declared using single quotes...
+
+            rune := 'a'
+
+        Runes are just a type alias for int32
+
+        If we have a data string that is encoded in UTF-32 there are special functions Go has for returning
+        the values out. For example ReadRune()
+
+            https://pkg.go.dev/strings#Reader.ReadRune
