@@ -122,3 +122,110 @@ Another way to run a Go application is to use the build command...
 
 We can also use 'go install' this will compile a binary and install it in the GOPATH bin directory. In this case...
 ~/go/bin
+
+
+Variables
+---------
+
+We can declare variables in Go a few different ways...
+
+    var i int
+    i = 45
+
+    var i int = 45
+
+    i := 45
+
+All of the above are doing the same thing. We do not need to declare the type when using the shorthand method since
+Go will use type inference.
+
+We can print out the variable value and its type using the fmt.Printf() function.
+
+When using the := syntax there is no way to specify the specific type. This can be useful when working with numbers.
+Ie we have i := 45 but actually want the type to be a float.
+
+    This syntax only works within functions and not at the package level. We need to use the full syntax to declare
+    variables at the package level.
+
+We can use the var block syntax to declare groups of variables at the same time...
+
+    var (
+        test string = "test"
+        free string = "free"
+    )
+
+    This works at the package and function scope.
+
+We cannot redeclare variables but we can declare a variable at the package scope and then redeclare it 
+at the function scope...
+
+    var i int = 27
+
+    func main() {
+        fmt.Println(i)
+        var i int = 42
+        fmt.Println(i)
+    }
+
+        The first print will be 27 and the second will be 42. The function scope takes precedence if a variable
+        is re-declared. This is known as shadowing.
+
+Variables in Go always need to be used in the function (local) scope. In the package scope they can be declared
+and not used.
+
+Variables in go can be lowercase or uppercase. A lower case variable declared in the package scope is only visible
+from within the package. 'I' will be accessible outside of the package. 'j' will not be accessible.
+
+    var I int = 27
+    var j int = 4
+
+    func main() {
+    }
+
+There are really only 3 scopes in Go...
+
+    Package scope uppercase is accessible outside the package.
+
+    Package scope lowercase is accessible within the package.
+
+    Block scope variables are only visible from within the block.
+
+Go has some variable naming conventions...
+
+    In counters, loops etc it is common to have single letter variable names since the lifespan of these variables is
+    small.
+
+    If a variable is used many places throughout a longer function we want to name it something more meaningful.
+    Either camel or pascal case.
+
+    If the variable is declared at the package scope we need to be verbose in the naming.
+
+    Acronyms should be all uppercase...
+
+        var theURL string = "http://test"
+
+Variables can be converted from one type to another...
+
+    float32(i)
+    int(i)
+    string(i)
+
+Go does not do implicit type conversions, ie a floating point cannot be assigned to an int.
+
+We need to be careful when doing this because information can be lost or the results can be unexpected if we
+don't know how Go works.
+
+    A good example is converting an int to a string...
+
+        i := 42
+        j = string(i)
+
+    The above will result in * because Go will look for the unicode value of 42 which is an asterisk. In Go
+    strings are just alias for sequences of bytes. In Go, strings are made up of a sequence of Unicode code points, 
+    which are typically represented using UTF-8 encoding. UTF-8 is a variable-length encoding, which means that 
+    each Unicode code point can be represented using one to four bytes.
+
+        Under the hood a string is actually a struct that contains a pointer to a block of memory that holds the
+        bytes making up the string as well as an int representing the length of the string in bytes.
+
+    The "strconv" package has a lot of useful functionality for string conversions with other data types.
