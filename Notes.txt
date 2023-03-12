@@ -17,6 +17,7 @@ https://www.youtube.com/watch?v=YS4e4q9oBaU
 ⌨️ (5:33:57) Goroutines
 ⌨️ (6:05:10) Channels
 
+
 Introduction
 ------------
 
@@ -84,3 +85,40 @@ Every application is structured into packages. We need to declare what package e
 'package' statement. The main package is the entry point to any Go application.
 
 We import libraries using the 'import' statement. The "fmt" package allows us to format strings.
+
+
+Go Installation
+---------------
+
+We can either install Go from the package manager or the binary from the website.
+
+Go has an ENV variable called the GOPATH that sets the root directory where all of our projects are. By default
+on Linux distros this is in the home/go directory.
+
+    As we download packages that we need they will be installed in the GOPATH
+
+We can install the Go extension in VSCode and then follow the prompts for any other go packages that it will
+need for linting etc.
+
+Once we have a simple go app we can run it as follows from a VSCode terminal...
+
+    go run ./src/github.com/isoment/firstapp/Main.go
+
+Another way to run a Go application is to use the build command...
+
+    The project root must have a go.mod file...
+        
+        go mod init github.com/isoment/firstapp
+
+    Then we can run...
+
+        From the main directory...
+
+            go build ./src/github.com/isoment/firstapp
+
+        We can specify where the binary is outputted...
+
+            go build -o ../path/to/binary
+
+We can also use 'go install' this will compile a binary and install it in the GOPATH bin directory. In this case...
+~/go/bin
