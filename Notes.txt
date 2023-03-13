@@ -388,3 +388,41 @@ Text in go falls into two basic categories...
         the values out. For example ReadRune()
 
             https://pkg.go.dev/strings#Reader.ReadRune
+
+
+Constants
+---------
+
+Constants are values that are assignable at compile time which we cannot change. We cannot set a constant to
+something that has to be determined at runtime, the following will not work...
+
+	const myConst float64 = math.Sin(1.54)
+
+Constants can be any of the primitive types but they cannot be collection types like arrays. Constants can be 
+shadowed just like variables. It isn't recommended to declare a const in the package scope and then in the block
+scope.
+
+Performing actions on variables and constants is allowed if they are the same type. Ie adding a const and var of
+type int is assignable to a new variable.
+
+    Typed constants work like immutable variables and since we specify the type they can only interoperate with
+    the same type.
+
+    Untyped constants work like literals (ie the literal value) and can interoperate with similar types ie
+    const test = 42 an be added to 15.6
+
+Const type can be inferred just like variables. The compiler will replace all instances of the constant in our
+code with the actual value.
+
+Go has a write only variable, it can assigned a value but not read from...
+
+    const (
+        _     = iota // 0
+        cat          // 1
+        dog          // 2
+        snake        // 3
+    )
+
+    The _ tells the compiler that we will never need to read from this value
+
+We can use operators when working with const
