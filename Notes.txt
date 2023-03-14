@@ -426,3 +426,39 @@ Go has a write only variable, it can assigned a value but not read from...
     The _ tells the compiler that we will never need to read from this value
 
 We can use operators when working with const
+
+
+Arrays and Slices
+-----------------
+
+Arrays and slices are both collections of data. Arrays are the foundation of slices. Go has built in functions
+for both of these. Array elements are contiguous in memory and therefor accessing them is very quick. Arrays contain 
+only one type. All elements must be of this type. We can have arrays of arrays or structs.
+
+To declare an array...
+
+    grades := [3]int{90, 100, 85}
+
+        [3] is the number of elements in the array. We then declare the type 'int'. We can then use the {} to 
+        initialize the values in the array.
+
+    grades := [...]int{90, 100, 85}
+
+        We don't need to specify the number of elements when passing in the data during initialization.
+
+    We don't need to pass in values for the array right away, we can declare the array and then assign values...
+
+        var students [3]string
+        students[0] = 'Bill'
+        students[1] = 'Sally'
+
+The first element in an array has an index of 0. Since arrays are made up of contiguous blocks of memory Go has
+a pointer to the first block of memory, ie the beginning of the array. The index tells Go how many elements to walk
+forward. When specify index 0 Go does not need to move forward to the next element, when we specify 1 it 
+moves forward one element etc.
+
+In Go when we declare an array assign it to a variable and then assign that variable to another we are making
+a new copy of the array and not pointing ot the original one in memory. This is where pointers will come in.
+
+Arrays have a limited use case since they are of fixed size. Slices are much more useful and function more like
+how arrays do in PHP and Javascript.
