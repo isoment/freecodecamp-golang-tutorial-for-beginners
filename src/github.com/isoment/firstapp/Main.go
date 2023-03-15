@@ -210,40 +210,109 @@ import "fmt"
 * Arrays *
 *********/
 
+// func main() {
+// 	fmt.Println("Arrays")
+
+// 	// Declaring the array and preassigning it values
+// 	grades := [3]int{90, 100, 85}
+// 	fmt.Printf("Grades: %v\n", grades)
+
+// 	// Declaring the array and assigning values after the fact
+// 	var students [3]string
+// 	students[0] = "Lisa"
+// 	students[1] = "Bill"
+// 	students[2] = "Frank"
+// 	fmt.Printf("Students: %v\n", students)
+// 	fmt.Printf("Student Count: %v\n", len(students))
+
+// 	// Arrays can be made up of arrays, ie a matrix
+// 	var identityMatrix [3][3]int
+// 	identityMatrix[0] = [3]int{1, 0, 0}
+// 	identityMatrix[1] = [3]int{0, 1, 0}
+// 	identityMatrix[2] = [3]int{0, 0, 1}
+// 	fmt.Printf("Identity matrix: %v\n", identityMatrix)
+
+// 	a := [...]int{1, 2, 3}
+// 	b := a
+// 	b[1] = 5
+// 	fmt.Println(a)
+// 	// We can see that b is a new copy of array a and it is not simply pointing to it in memory.
+// 	fmt.Println(b)
+// 	// We can use a pointer, which is just a reference to the original value in memory. Here we set
+// 	// the value of c to point to a
+// 	c := &a
+// 	fmt.Println(c)
+// 	// When we change an element in c it is reflected in a since c is just a pointer to a
+// 	c[1] = 16
+// 	fmt.Println(c)
+// 	fmt.Println(a)
+// }
+
+/*********
+* Slices *
+*********/
+
 func main() {
-	fmt.Println("Arrays")
+	fmt.Println("Slices")
 
-	// Declaring the array and preassigning it values
-	grades := [3]int{90, 100, 85}
-	fmt.Printf("Grades: %v\n", grades)
-
-	// Declaring the array and assigning values after the fact
-	var students [3]string
-	students[0] = "Lisa"
-	students[1] = "Bill"
-	students[2] = "Frank"
-	fmt.Printf("Students: %v\n", students)
-	fmt.Printf("Student Count: %v\n", len(students))
-
-	// Arrays can be made up of arrays, ie a matrix
-	var identityMatrix [3][3]int
-	identityMatrix[0] = [3]int{1, 0, 0}
-	identityMatrix[1] = [3]int{0, 1, 0}
-	identityMatrix[2] = [3]int{0, 0, 1}
-	fmt.Printf("Identity matrix: %v\n", identityMatrix)
-
-	a := [...]int{1, 2, 3}
-	b := a
-	b[1] = 5
+	// Declaring a slice and initializing some data
+	a := []int{90, 100, 85}
 	fmt.Println(a)
-	// We can see that b is a new copy of array a and it is not simply pointing to it in memory.
+
+	// Just like with arrays we can call len() to get the length
+	fmt.Printf("%v\n", len(a))
+
+	// There is a function called cap() which gives the value of the underlying array
+	fmt.Printf("%v\n", cap(a))
+
+	// We can also use this syntax to create slices...
+	b := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	// For the [x:x] syntax the first number is inclusive (included) and the second is exclusive (not included)
+	c := b[:]   // Create a slice of all the elements in a
+	d := b[3:]  // Create a slice from the 4th element to the end
+	e := b[:6]  // Slice the first 6 elements
+	f := b[3:6] // Slice the 4th, 5th and 6th elements
 	fmt.Println(b)
-	// We can use a pointer, which is just a reference to the original value in memory. Here we set
-	// the value of c to point to a
-	c := &a
 	fmt.Println(c)
-	// When we change an element in c it is reflected in a since c is just a pointer to a
-	c[1] = 16
-	fmt.Println(c)
-	fmt.Println(a)
+	fmt.Println(d)
+	fmt.Println(e)
+	fmt.Println(f)
+
+	// We can use the make() function to create a slice, the first argument is the slice and type, the second
+	// is the length and the third is the capacity.
+	g := make([]int, 3, 100)
+	fmt.Println(g)
+	fmt.Printf("%v\n", len(g))
+	fmt.Printf("%v\n", cap(g))
+
+	h := []int{}
+	fmt.Println(h)
+	fmt.Printf("Length: %v\n", len(h))
+	fmt.Printf("Capacity: %v\n", cap(h))
+	h = append(h, 1, 2, 3, 4, 5, 6)
+	fmt.Printf("Length: %v\n", len(h))
+	fmt.Printf("Capacity: %v\n", cap(h))
+
+	// Go has an operator similar to the spread operator that we can use to concat slices
+	i := []int{1}
+	i = append(i, []int{2, 3, 4, 5}...)
+	fmt.Println(i)
+
+	// We can remove the first element of a slice...
+	j := []int{1, 2, 3, 4, 5}
+	k := j[1:]
+	fmt.Println(k)
+
+	// We can remove the last element of a slice...
+	l := []int{1, 2, 3, 4, 5}
+	m := j[:len(l)-1]
+	fmt.Println(m)
+
+	// Removing elements from other positions is more complex, we have to create two slices and concatenate
+	// them together, for example to remove the element at index 2. We need to be very careful with this since
+	// the underlying array is being modified. If we are using the original slice anywhere else this will
+	// cause problems.
+	n := []int{1, 2, 3, 4, 5}
+	o := append(n[:2], n[3:]...)
+	fmt.Println(o)
 }

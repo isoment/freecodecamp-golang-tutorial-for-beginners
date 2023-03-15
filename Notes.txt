@@ -446,7 +446,8 @@ To declare an array...
 
         We don't need to specify the number of elements when passing in the data during initialization.
 
-    We don't need to pass in values for the array right away, we can declare the array and then assign values...
+    We don't need to pass in values for the array right away, we can declare the array and it will be filled with the deefault
+    values for the type. We can then assign values...
 
         var students [3]string
         students[0] = 'Bill'
@@ -462,3 +463,40 @@ a new copy of the array and not pointing ot the original one in memory. This is 
 
 Arrays have a limited use case since they are of fixed size. Slices are much more useful and function more like
 how arrays do in PHP and Javascript.
+
+Slices have underlying arrays. But they do not have a fixed size. We can add and remove elements from them.
+
+A slice can be declared and initialized with data as follows...
+
+    a := []int{1, 2, 3}
+
+Slices are reference types a slice is pointing to an array in memory, it can be a fragment of that array
+or the whole thing. Unlike arrays they are not copied when referenced...
+
+    a := []int{1, 2, 3}
+    b := a
+
+        b is referencing a directly in memory
+
+There are other ways to create slices, these can all be used on arrays as well...
+
+    a := []int{1, 2, 3, 4, 5, 6, 7}
+    b := a[:]     // Create a slice of all the elements in a
+    c := a[3:]    // Create a slice from the 4th element to the end
+    d := a[:6]    // Slice the first 6 elements
+    e := a[3:6]   // Slice the 4th, 5th and 6th elements
+
+For the above syntax the first number is inclusive (included) and the second is exclusive (not included)
+
+When we create slices they are using arrays under the hood. When we append elements to a slice, Go may need to 
+allocate a new underlying array if the current array is not large enough to hold the new elements. In this case, 
+Go will create a new array, copy the contents of the old array into the new array, and update the slice's 
+pointer to point to the new array.
+
+The append() function will add a new element to a slice...
+
+    h := []int{}
+	h = append(h, 1, 2, 3, 4)
+
+The append() function is variadic. It accepts as many arguments as need be, each argument after the first
+will be added to the array.
