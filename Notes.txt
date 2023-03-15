@@ -500,3 +500,44 @@ The append() function will add a new element to a slice...
 
 The append() function is variadic. It accepts as many arguments as need be, each argument after the first
 will be added to the array.
+
+
+Maps
+----
+
+Maps in Go are collections of key value pairs. All of the keys have to be of one type and the values do as
+well. Every key value pair in the map has to be of the defined types. To declare a map...
+
+    townPopulations := map[string]int{
+        "Faketown": 7434,
+        "Fakeville": 420012,
+        "Fakeburg": 472384,
+        "Fakeglenn": 9182
+    }
+
+We can also use the make function to declare a map...
+
+    townPopulations := make(map[string]int)
+
+The return order of a map is not guaranteed. Maps are higher level abstractions of hash tables.
+
+Keys can be anything that is testable for equality. Most data types can be used. Slices, maps and other functions
+cannot be used as keys.
+
+We can get values from the map by using a variable or a literal...
+
+    townName := "Fakeburg"
+    townPopulations["Fakeburg"]
+    townPopulations[townName]
+
+To delete a value from a map...
+
+    delete(townPopulations, "Fakeburg")
+
+If the key does not exist in that map a 0 is returned. This can be problematic if our map has any 0 values in it.
+We can use a different syntax to check if the key is in the map...
+
+    pop, ok := townPopulations["Missingtown"]
+
+Maps like slices can be referenced in new variables and modified. When modifying the reference the original is
+modified as well.

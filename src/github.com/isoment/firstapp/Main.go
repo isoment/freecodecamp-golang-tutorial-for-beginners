@@ -252,67 +252,93 @@ import "fmt"
 * Slices *
 *********/
 
+// func main() {
+// 	fmt.Println("Slices")
+
+// 	// Declaring a slice and initializing some data
+// 	a := []int{90, 100, 85}
+// 	fmt.Println(a)
+
+// 	// Just like with arrays we can call len() to get the length
+// 	fmt.Printf("%v\n", len(a))
+
+// 	// There is a function called cap() which gives the value of the underlying array
+// 	fmt.Printf("%v\n", cap(a))
+
+// 	// We can also use this syntax to create slices...
+// 	b := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+// 	// For the [x:x] syntax the first number is inclusive (included) and the second is exclusive (not included)
+// 	c := b[:]   // Create a slice of all the elements in a
+// 	d := b[3:]  // Create a slice from the 4th element to the end
+// 	e := b[:6]  // Slice the first 6 elements
+// 	f := b[3:6] // Slice the 4th, 5th and 6th elements
+// 	fmt.Println(b)
+// 	fmt.Println(c)
+// 	fmt.Println(d)
+// 	fmt.Println(e)
+// 	fmt.Println(f)
+
+// 	// We can use the make() function to create a slice, the first argument is the slice and type, the second
+// 	// is the length and the third is the capacity.
+// 	g := make([]int, 3, 100)
+// 	fmt.Println(g)
+// 	fmt.Printf("%v\n", len(g))
+// 	fmt.Printf("%v\n", cap(g))
+
+// 	h := []int{}
+// 	fmt.Println(h)
+// 	fmt.Printf("Length: %v\n", len(h))
+// 	fmt.Printf("Capacity: %v\n", cap(h))
+// 	h = append(h, 1, 2, 3, 4, 5, 6)
+// 	fmt.Printf("Length: %v\n", len(h))
+// 	fmt.Printf("Capacity: %v\n", cap(h))
+
+// 	// Go has an operator similar to the spread operator that we can use to concat slices
+// 	i := []int{1}
+// 	i = append(i, []int{2, 3, 4, 5}...)
+// 	fmt.Println(i)
+
+// 	// We can remove the first element of a slice...
+// 	j := []int{1, 2, 3, 4, 5}
+// 	k := j[1:]
+// 	fmt.Println(k)
+
+// 	// We can remove the last element of a slice...
+// 	l := []int{1, 2, 3, 4, 5}
+// 	m := j[:len(l)-1]
+// 	fmt.Println(m)
+
+// 	// Removing elements from other positions is more complex, we have to create two slices and concatenate
+// 	// them together, for example to remove the element at index 2. We need to be very careful with this since
+// 	// the underlying array is being modified. If we are using the original slice anywhere else this will
+// 	// cause problems.
+// 	n := []int{1, 2, 3, 4, 5}
+// 	o := append(n[:2], n[3:]...)
+// 	fmt.Println(o)
+// }
+
+/*******
+* Maps *
+*******/
+
 func main() {
-	fmt.Println("Slices")
+	townPopulations := map[string]int{
+		"Faketown":  7434,
+		"Fakeville": 420012,
+		"Fakeburg":  472384,
+		"Fakeglenn": 9182,
+	}
 
-	// Declaring a slice and initializing some data
-	a := []int{90, 100, 85}
-	fmt.Println(a)
-
-	// Just like with arrays we can call len() to get the length
-	fmt.Printf("%v\n", len(a))
-
-	// There is a function called cap() which gives the value of the underlying array
-	fmt.Printf("%v\n", cap(a))
-
-	// We can also use this syntax to create slices...
-	b := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	// For the [x:x] syntax the first number is inclusive (included) and the second is exclusive (not included)
-	c := b[:]   // Create a slice of all the elements in a
-	d := b[3:]  // Create a slice from the 4th element to the end
-	e := b[:6]  // Slice the first 6 elements
-	f := b[3:6] // Slice the 4th, 5th and 6th elements
-	fmt.Println(b)
-	fmt.Println(c)
-	fmt.Println(d)
-	fmt.Println(e)
-	fmt.Println(f)
-
-	// We can use the make() function to create a slice, the first argument is the slice and type, the second
-	// is the length and the third is the capacity.
-	g := make([]int, 3, 100)
-	fmt.Println(g)
-	fmt.Printf("%v\n", len(g))
-	fmt.Printf("%v\n", cap(g))
-
-	h := []int{}
-	fmt.Println(h)
-	fmt.Printf("Length: %v\n", len(h))
-	fmt.Printf("Capacity: %v\n", cap(h))
-	h = append(h, 1, 2, 3, 4, 5, 6)
-	fmt.Printf("Length: %v\n", len(h))
-	fmt.Printf("Capacity: %v\n", cap(h))
-
-	// Go has an operator similar to the spread operator that we can use to concat slices
-	i := []int{1}
-	i = append(i, []int{2, 3, 4, 5}...)
-	fmt.Println(i)
-
-	// We can remove the first element of a slice...
-	j := []int{1, 2, 3, 4, 5}
-	k := j[1:]
-	fmt.Println(k)
-
-	// We can remove the last element of a slice...
-	l := []int{1, 2, 3, 4, 5}
-	m := j[:len(l)-1]
-	fmt.Println(m)
-
-	// Removing elements from other positions is more complex, we have to create two slices and concatenate
-	// them together, for example to remove the element at index 2. We need to be very careful with this since
-	// the underlying array is being modified. If we are using the original slice anywhere else this will
-	// cause problems.
-	n := []int{1, 2, 3, 4, 5}
-	o := append(n[:2], n[3:]...)
-	fmt.Println(o)
+	// Getting a value for a key
+	fmt.Println(townPopulations["Fakeglenn"])
+	// Setting a new entry in the map
+	townPopulations["Realtown"] = 9236621
+	// deleting a value from the map
+	delete(townPopulations, "Realtown")
+	fmt.Println(townPopulations)
+	// We can use this syntax to return a boolean if the key is in the map or not
+	pop, ok := townPopulations["Fakeburg"]
+	fmt.Println(pop, ok)
+	// We can get the count of elements in a map
+	fmt.Println(len(townPopulations))
 }
