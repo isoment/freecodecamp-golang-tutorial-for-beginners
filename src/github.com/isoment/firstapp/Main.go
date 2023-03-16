@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 /************
 * VARIABLES *
@@ -321,24 +324,92 @@ import "fmt"
 * Maps *
 *******/
 
-func main() {
-	townPopulations := map[string]int{
-		"Faketown":  7434,
-		"Fakeville": 420012,
-		"Fakeburg":  472384,
-		"Fakeglenn": 9182,
-	}
+// func main() {
+// 	townPopulations := map[string]int{
+// 		"Faketown":  7434,
+// 		"Fakeville": 420012,
+// 		"Fakeburg":  472384,
+// 		"Fakeglenn": 9182,
+// 	}
 
-	// Getting a value for a key
-	fmt.Println(townPopulations["Fakeglenn"])
-	// Setting a new entry in the map
-	townPopulations["Realtown"] = 9236621
-	// deleting a value from the map
-	delete(townPopulations, "Realtown")
-	fmt.Println(townPopulations)
-	// We can use this syntax to return a boolean if the key is in the map or not
-	pop, ok := townPopulations["Fakeburg"]
-	fmt.Println(pop, ok)
-	// We can get the count of elements in a map
-	fmt.Println(len(townPopulations))
+// 	// Getting a value for a key
+// 	fmt.Println(townPopulations["Fakeglenn"])
+// 	// Setting a new entry in the map
+// 	townPopulations["Realtown"] = 9236621
+// 	// deleting a value from the map
+// 	delete(townPopulations, "Realtown")
+// 	fmt.Println(townPopulations)
+// 	// We can use this syntax to return a boolean if the key is in the map or not
+// 	pop, ok := townPopulations["Fakeburg"]
+// 	fmt.Println(pop, ok)
+// 	// We can get the count of elements in a map
+// 	fmt.Println(len(townPopulations))
+// }
+
+/**********
+* Structs *
+**********/
+
+type Animal struct {
+	Legs       int
+	Name       string
+	Species    string
+	Attributes []string
+}
+
+/*
+Go supports embedding structs within other structs. Go favors composition and delegates
+the functionality to the Animal struct. We can access Animal values just like if they were part
+of the Bird struct. Bird is not an instance of an Animal it HAS A Animal
+*/
+type Bird struct {
+	Animal
+	Speed  float32
+	CanFly bool
+}
+
+type Request struct {
+	Name   string `required max:"100"`
+	Origin string
+}
+
+func main() {
+	dog := Animal{
+		Legs:       4,
+		Name:       "Rover",
+		Species:    "Canis Familiaris",
+		Attributes: []string{"Furry", "Smelly", "Likes to drool"},
+	}
+	fmt.Println(dog)
+	fmt.Println(dog.Attributes[0])
+
+	// We can declare anonymous structs. The first {} defines the structure and the second
+	// initializes the values.
+	aDoctor := struct{ name string }{name: "Billford"}
+	fmt.Println(aDoctor.name)
+	// Creating a struct from another struct and then modifying the new one will not change the original
+	anotherDoctor := aDoctor
+	anotherDoctor.name = "Sally"
+	fmt.Println(aDoctor.name)
+
+	// We can declare a struct this way...
+	bird := Bird{}
+	bird.Name = "Emu"
+	bird.Legs = 2
+	bird.Speed = 48
+	bird.CanFly = false
+	fmt.Println(bird.Name)
+
+	// When using the literal syntax to declare a struct we need to be more specific...
+	hawk := Bird{
+		Animal: Animal{Name: "Hawk", Legs: 2},
+		Speed:  60,
+		CanFly: true,
+	}
+	fmt.Printf("%v\n", hawk)
+
+	// We can access a structs tags using reflection
+	t := reflect.TypeOf(Request{})
+	field, _ := t.FieldByName("Name")
+	fmt.Println(field.Tag)
 }

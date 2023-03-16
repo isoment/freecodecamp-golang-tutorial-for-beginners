@@ -541,3 +541,75 @@ We can use a different syntax to check if the key is in the map...
 
 Maps like slices can be referenced in new variables and modified. When modifying the reference the original is
 modified as well.
+
+
+Structs
+-------
+
+Structs are mixed collections of data, similar to how objects contain data in OOP languages. They are powerful in
+the sense that their structure can be completely customized and contain all different types of data.
+
+Here is an example of defining a struct...
+
+    type Animal struct {
+        legs       int
+        name       string
+        attributes []string
+    }
+
+    func main() {
+        dog := Animal{
+            legs:       4,
+            name:       "Rover",
+            attributes: []string{"Furry", "Smelly", "Likes to drool"},
+        }
+        fmt.Println(dog)
+    }
+
+	fmt.Println(dog.attributes[0])
+
+When creating a dog from the Animal struct we can omit the keys. This will still work as long as they are in
+the correct order but this is not a good idea and can make things difficult to maintain.
+
+Just like with naming variables any structs starting with a capital letter are visible outside. If the want
+the field names to be available to the outside they also need to be capitalized.
+
+    type Animal struct {
+        Legs       int
+        Name       string
+        Attributes []string
+    }
+
+Struct names should be pascal case or camel case and not contain any underscores symbols etc.
+
+We can declare anonymous structs...
+
+    aDoctor:= struct{name string}{name: "Billford"}
+
+These are not as commonly used as regular structs.
+
+When creating a struct from another struct modifying the new one does not change the original. Unlike maps and slices
+structs are independent data sets. Keep this in mind when passing them around since they do take up memory.
+
+	anotherDoctor := aDoctor
+	anotherDoctor.name = "Sally"
+
+    If we do want to reference the original we can use the address of operator and set a pointer anotherDoctor is a
+    pointer to aDoctor...
+
+    	anotherDoctor := &aDoctor
+	    anotherDoctor.name = "Sally"
+
+Go doesn't have traditional OOP concepts like inheritance. It instead favors the use of composition thorugh embedding.
+Embedding is generally not used for behavior, it is better to use interfaces. Embedding is useful for getting some
+base behavior into a custom type.
+
+When creating structs we can define a tag...
+
+    type Request struct {
+        Name string `required max:"100"`
+        Origin string
+    }
+
+    Tags are enclosed in backticks and have space delimited key value pairs, we do not need to specify a value
+    just a key is fine. To access this tag we can use reflection
