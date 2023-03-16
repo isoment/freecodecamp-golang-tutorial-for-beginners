@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"reflect"
+	"math"
 )
 
 /************
@@ -350,66 +350,106 @@ import (
 * Structs *
 **********/
 
-type Animal struct {
-	Legs       int
-	Name       string
-	Species    string
-	Attributes []string
-}
+// type Animal struct {
+// 	Legs       int
+// 	Name       string
+// 	Species    string
+// 	Attributes []string
+// }
 
-/*
-Go supports embedding structs within other structs. Go favors composition and delegates
-the functionality to the Animal struct. We can access Animal values just like if they were part
-of the Bird struct. Bird is not an instance of an Animal it HAS A Animal
-*/
-type Bird struct {
-	Animal
-	Speed  float32
-	CanFly bool
-}
+// /*
+// Go supports embedding structs within other structs. Go favors composition and delegates
+// the functionality to the Animal struct. We can access Animal values just like if they were part
+// of the Bird struct. Bird is not an instance of an Animal it HAS A Animal
+// */
+// type Bird struct {
+// 	Animal
+// 	Speed  float32
+// 	CanFly bool
+// }
 
-type Request struct {
-	Name   string `required max:"100"`
-	Origin string
-}
+// type Request struct {
+// 	Name   string `required max:"100"`
+// 	Origin string
+// }
+
+// func main() {
+// 	dog := Animal{
+// 		Legs:       4,
+// 		Name:       "Rover",
+// 		Species:    "Canis Familiaris",
+// 		Attributes: []string{"Furry", "Smelly", "Likes to drool"},
+// 	}
+// 	fmt.Println(dog)
+// 	fmt.Println(dog.Attributes[0])
+
+// 	// We can declare anonymous structs. The first {} defines the structure and the second
+// 	// initializes the values.
+// 	aDoctor := struct{ name string }{name: "Billford"}
+// 	fmt.Println(aDoctor.name)
+// 	// Creating a struct from another struct and then modifying the new one will not change the original
+// 	anotherDoctor := aDoctor
+// 	anotherDoctor.name = "Sally"
+// 	fmt.Println(aDoctor.name)
+
+// 	// We can declare a struct this way...
+// 	bird := Bird{}
+// 	bird.Name = "Emu"
+// 	bird.Legs = 2
+// 	bird.Speed = 48
+// 	bird.CanFly = false
+// 	fmt.Println(bird.Name)
+
+// 	// When using the literal syntax to declare a struct we need to be more specific...
+// 	hawk := Bird{
+// 		Animal: Animal{Name: "Hawk", Legs: 2},
+// 		Speed:  60,
+// 		CanFly: true,
+// 	}
+// 	fmt.Printf("%v\n", hawk)
+
+// 	// We can access a structs tags using reflection
+// 	t := reflect.TypeOf(Request{})
+// 	field, _ := t.FieldByName("Name")
+// 	fmt.Println(field.Tag)
+// }
+
+/****************
+* If Statements *
+****************/
 
 func main() {
-	dog := Animal{
-		Legs:       4,
-		Name:       "Rover",
-		Species:    "Canis Familiaris",
-		Attributes: []string{"Furry", "Smelly", "Likes to drool"},
+	// Variables can be initialized in an if statement. We have access to the variables
+	// initialized within the block scope. They are not available outside the block!
+	a := map[string]string{
+		"Faketown": "A great place to live",
 	}
-	fmt.Println(dog)
-	fmt.Println(dog.Attributes[0])
-
-	// We can declare anonymous structs. The first {} defines the structure and the second
-	// initializes the values.
-	aDoctor := struct{ name string }{name: "Billford"}
-	fmt.Println(aDoctor.name)
-	// Creating a struct from another struct and then modifying the new one will not change the original
-	anotherDoctor := aDoctor
-	anotherDoctor.name = "Sally"
-	fmt.Println(aDoctor.name)
-
-	// We can declare a struct this way...
-	bird := Bird{}
-	bird.Name = "Emu"
-	bird.Legs = 2
-	bird.Speed = 48
-	bird.CanFly = false
-	fmt.Println(bird.Name)
-
-	// When using the literal syntax to declare a struct we need to be more specific...
-	hawk := Bird{
-		Animal: Animal{Name: "Hawk", Legs: 2},
-		Speed:  60,
-		CanFly: true,
+	if pop, ok := a["Faketown"]; ok {
+		fmt.Println(pop)
 	}
-	fmt.Printf("%v\n", hawk)
 
-	// We can access a structs tags using reflection
-	t := reflect.TypeOf(Request{})
-	field, _ := t.FieldByName("Name")
-	fmt.Println(field.Tag)
+	// Go has a feature called short circuiting. We might think that the if statement below
+	// would result in fmt.Println("returning true...") but it does not. This is because the first
+	// part of the if statement guess < 1  results in true and they other two parts do not even get
+	// evaluated.
+	guess := -30
+	if guess < 1 || returnTrue() || guess > 100 {
+		fmt.Println("The guess must be between 1 and 100")
+	}
+
+	// We need to exercise caution when using logic operations an floating point numbers. The expected
+	// behavior is that num an a are always equal
+	num := 0.123
+	if a := math.Pow(math.Sqrt(num), 2); a == num {
+		fmt.Println(a)
+		fmt.Println("These are the same")
+	} else {
+		fmt.Println(a)
+		fmt.Println("These are different")
+	}
+}
+
+func returnTrue() bool {
+	fmt.Println("returning true...")
+	return true
 }
