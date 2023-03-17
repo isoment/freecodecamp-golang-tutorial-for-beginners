@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 /************
@@ -418,38 +417,83 @@ import (
 * If Statements *
 ****************/
 
+// func main() {
+// 	// Variables can be initialized in an if statement. We have access to the variables
+// 	// initialized within the block scope. They are not available outside the block!
+// 	a := map[string]string{
+// 		"Faketown": "A great place to live",
+// 	}
+// 	if pop, ok := a["Faketown"]; ok {
+// 		fmt.Println(pop)
+// 	}
+
+// 	// Go has a feature called short circuiting. We might think that the if statement below
+// 	// would result in fmt.Println("returning true...") but it does not. This is because the first
+// 	// part of the if statement guess < 1  results in true and they other two parts do not even get
+// 	// evaluated.
+// 	guess := -30
+// 	if guess < 1 || returnTrue() || guess > 100 {
+// 		fmt.Println("The guess must be between 1 and 100")
+// 	}
+
+// 	// We need to exercise caution when using logic operations an floating point numbers. The expected
+// 	// behavior is that num an a are always equal
+// 	num := 0.123
+// 	if a := math.Pow(math.Sqrt(num), 2); a == num {
+// 		fmt.Println(a)
+// 		fmt.Println("These are the same")
+// 	} else {
+// 		fmt.Println(a)
+// 		fmt.Println("These are different")
+// 	}
+// }
+
+// func returnTrue() bool {
+// 	fmt.Println("returning true...")
+// 	return true
+// }
+
+/*******************
+* Switch Statement *
+*******************/
+
 func main() {
-	// Variables can be initialized in an if statement. We have access to the variables
-	// initialized within the block scope. They are not available outside the block!
-	a := map[string]string{
-		"Faketown": "A great place to live",
-	}
-	if pop, ok := a["Faketown"]; ok {
-		fmt.Println(pop)
-	}
-
-	// Go has a feature called short circuiting. We might think that the if statement below
-	// would result in fmt.Println("returning true...") but it does not. This is because the first
-	// part of the if statement guess < 1  results in true and they other two parts do not even get
-	// evaluated.
-	guess := -30
-	if guess < 1 || returnTrue() || guess > 100 {
-		fmt.Println("The guess must be between 1 and 100")
+	// Switch statements in Go allow multiple options per case.
+	switch 1 {
+	case 1, 8, 9:
+		fmt.Println("one eight nine")
+	case 2:
+		fmt.Println("two")
+	default:
+		fmt.Println("default")
 	}
 
-	// We need to exercise caution when using logic operations an floating point numbers. The expected
-	// behavior is that num an a are always equal
-	num := 0.123
-	if a := math.Pow(math.Sqrt(num), 2); a == num {
-		fmt.Println(a)
-		fmt.Println("These are the same")
-	} else {
-		fmt.Println(a)
-		fmt.Println("These are different")
+	// Go has a tagless syntax for switch statements. We can use comparison and logical
+	// operators not in the case statements.
+	i := 10
+	switch {
+	case i <= 10:
+		fmt.Println("Ten less")
+		fallthrough
+	case i <= 20:
+		fmt.Println("Twenty less")
+	default:
+		fmt.Println("Default")
 	}
-}
 
-func returnTrue() bool {
-	fmt.Println("returning true...")
-	return true
+	// interface{} is an empty interface. An empty interface satisfies all types. In newer versions
+	// of Go there is the 'any' type which works as well.
+	var j interface{} = [3]int{}
+	switch j.(type) {
+	case int:
+		fmt.Println("int")
+	case float64:
+		fmt.Println("float64")
+	case [3]int:
+		fmt.Println("array of 3 int")
+		if 3 < 5 {
+			break
+		}
+		fmt.Println("DANGER")
+	}
 }

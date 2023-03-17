@@ -645,3 +645,37 @@ We can use operators that result in a boolean value for if statements. We can al
 
 We need to be careful with floating point number comparison just like in other languages. They are approximations
 and can have results we don't expect if we are not careful.
+
+
+Switch Statements
+-----------------
+
+Switch statements work just like in most other languages but have some unique features. Cases can have different
+options.
+
+	switch 1 {
+	case 1, 8, 9:
+		fmt.Println("one eight nine")
+	case 2:
+		fmt.Println("two")
+	default:
+		fmt.Println("default")
+
+	}
+
+We can also use initializers in case statements...
+
+    switch i := 2 + 3; i {
+	case 1, 8, 9:
+		fmt.Println("one eight nine")
+	case 2, 5:
+		fmt.Println("two five")
+	default:
+		fmt.Println("default")
+
+	}
+
+In PHP and JS there is a break statement in switches. In Go the break statement is implied. When we do not want
+a break we can use the fallthrough keyword. Using the fallthrough statement in a switch block means the next block is 
+entered even if the expression doesn't match but this is only valid when there has already been a match. This
+isn't used very often.
