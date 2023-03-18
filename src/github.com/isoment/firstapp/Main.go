@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 /************
 * VARIABLES *
@@ -457,43 +455,113 @@ import (
 * Switch Statement *
 *******************/
 
+// func main() {
+// 	// Switch statements in Go allow multiple options per case.
+// 	switch 1 {
+// 	case 1, 8, 9:
+// 		fmt.Println("one eight nine")
+// 	case 2:
+// 		fmt.Println("two")
+// 	default:
+// 		fmt.Println("default")
+// 	}
+
+// 	// Go has a tagless syntax for switch statements. We can use comparison and logical
+// 	// operators not in the case statements.
+// 	i := 10
+// 	switch {
+// 	case i <= 10:
+// 		fmt.Println("Ten less")
+// 		fallthrough
+// 	case i <= 20:
+// 		fmt.Println("Twenty less")
+// 	default:
+// 		fmt.Println("Default")
+// 	}
+
+// 	// interface{} is an empty interface. An empty interface satisfies all types. In newer versions
+// 	// of Go there is the 'any' type which works as well.
+// 	var j interface{} = [3]int{}
+// 	switch j.(type) {
+// 	case int:
+// 		fmt.Println("int")
+// 	case float64:
+// 		fmt.Println("float64")
+// 	case [3]int:
+// 		fmt.Println("array of 3 int")
+// 		if 3 < 5 {
+// 			break
+// 		}
+// 		fmt.Println("DANGER")
+// 	}
+// }
+
+/**********
+* Looping *
+**********/
+
 func main() {
-	// Switch statements in Go allow multiple options per case.
-	switch 1 {
-	case 1, 8, 9:
-		fmt.Println("one eight nine")
-	case 2:
-		fmt.Println("two")
-	default:
-		fmt.Println("default")
+	// Create a basic loop to increment by 1
+	for i := 0; i < 5; i = i + 1 {
+		fmt.Println(i)
+		if i%2 == 0 {
+			// Divide i by 2 and assign back to i
+			i /= 2
+		} else {
+			i = 2*i + 1
+		}
 	}
 
-	// Go has a tagless syntax for switch statements. We can use comparison and logical
-	// operators not in the case statements.
-	i := 10
-	switch {
-	case i <= 10:
-		fmt.Println("Ten less")
-		fallthrough
-	case i <= 20:
-		fmt.Println("Twenty less")
-	default:
-		fmt.Println("Default")
+	fmt.Println("BREAK")
+
+	// To create a loop with multiple pointers
+	for i, j := 0, 0; i < 5; i, j = i+1, j+2 {
+		fmt.Println(i, j)
 	}
 
-	// interface{} is an empty interface. An empty interface satisfies all types. In newer versions
-	// of Go there is the 'any' type which works as well.
-	var j interface{} = [3]int{}
-	switch j.(type) {
-	case int:
-		fmt.Println("int")
-	case float64:
-		fmt.Println("float64")
-	case [3]int:
-		fmt.Println("array of 3 int")
-		if 3 < 5 {
+	fmt.Println("BREAK")
+
+	// A do while loop equivalent
+	count := 0
+	for count < 5 {
+		fmt.Println(count)
+		count++
+	}
+
+	fmt.Println("BREAK")
+
+	// An infinite for loop with a break statement, this will break out of the loop completely.
+	h := 0
+	for {
+		fmt.Println(h)
+		h++
+		if h == 5 {
 			break
 		}
-		fmt.Println("DANGER")
+	}
+
+	fmt.Println("BREAK")
+
+	// The continue keyword will break out of the current iteration of the loop but continue
+	// to the next one.
+	for i := 0; i < 5; i++ {
+		if i%2 == 0 {
+			continue
+		}
+		fmt.Println(i)
+	}
+
+	fmt.Println("BREAK")
+
+	// A nested loop, we can use a label to break out of both loops. We define the label before the loop
+	// we want to break out of. If we did not use the label we would only be breaking out of the inner loop.
+Loop:
+	for i := 1; i <= 3; i++ {
+		for j := 1; j <= 3; j++ {
+			fmt.Println(i * j)
+			if i*j >= 3 {
+				break Loop
+			}
+		}
 	}
 }
