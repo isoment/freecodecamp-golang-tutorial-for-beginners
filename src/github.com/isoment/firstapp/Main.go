@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
 
 /************
 * VARIABLES *
@@ -570,31 +575,67 @@ import "fmt"
 * Looping Collections *
 **********************/
 
+// func main() {
+// 	// Looping over a slice, k is key and v is value
+// 	s := []int{1, 2, 3}
+// 	for k, v := range s {
+// 		fmt.Println(k, v)
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// Looping over a map
+// 	townPopulations := map[string]int{
+// 		"Faketown":  7434,
+// 		"Fakeville": 420012,
+// 		"Fakeburg":  472384,
+// 		"Fakeglenn": 9182,
+// 	}
+// 	for k, v := range townPopulations {
+// 		fmt.Println(k, v)
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// Looping over a string, and only getting the value
+// 	myString := "This it1!名"
+// 	for _, v := range myString {
+// 		fmt.Println(string(v), v)
+// 	}
+// }
+
+/********
+* Defer *
+********/
+
 func main() {
-	// Looping over a slice, k is key and v is value
-	s := []int{1, 2, 3}
-	for k, v := range s {
-		fmt.Println(k, v)
-	}
+	// fmt.Println("start")
+	// defer fmt.Println("middle")
+	// fmt.Println("end")
+
+	// Defer statements operate last in first out.
+	// defer fmt.Println("start")
+	// defer fmt.Println("middle")
+	// defer fmt.Println("end")
 
 	fmt.Println("BREAK")
+	callGoogle()
+}
 
-	// Looping over a map
-	townPopulations := map[string]int{
-		"Faketown":  7434,
-		"Fakeville": 420012,
-		"Fakeburg":  472384,
-		"Fakeglenn": 9182,
+// Defer is useful when we want to associate closing of a resource right after it is open. Without defer we would
+// have to wait till after we are done with the operations on the resource.
+func callGoogle() {
+	res, err := http.Get("http://www.google.com/robots.txt")
+	if err != nil {
+		log.Fatal(err)
 	}
-	for k, v := range townPopulations {
-		fmt.Println(k, v)
+	defer res.Body.Close()
+
+	robots, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	fmt.Println("BREAK")
-
-	// Looping over a string, and only getting the value
-	myString := "This it1!名"
-	for _, v := range myString {
-		fmt.Println(string(v), v)
-	}
+	fmt.Printf("%s", robots)
 }

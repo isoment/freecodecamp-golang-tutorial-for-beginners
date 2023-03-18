@@ -705,3 +705,26 @@ We can also omit the incrementor, the equivalent of a do while loop...
 		fmt.Println(i)
         i++
     }
+
+
+Defer
+-----
+
+Control flows from the top to bottom of any function that we call. We can alter this using Defer
+
+    func main() {
+        fmt.Println("start")
+        defer fmt.Println("middle")
+        fmt.Println("end")
+    }
+
+The Println with defer is printed last. This is because defer adds the function call to a stack. They are then called
+in a last in first out order.
+
+    func main() {
+        a := "start"
+        defer fmt.Println(a)
+        a = "end"
+    }
+
+    When we defer a function it will take any of its arguments at the time the defer is called.
