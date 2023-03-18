@@ -248,7 +248,7 @@ types for these.
 
     The int type is a signed integer of unspecified size. The size is unspecified since it depends on the
     system environment. It is at least 32bit but can be 64 or 128 depending on the system. This is the default
-    integer type.
+    integer type. Even on 64bit systems the int type often takes up 4 bytes or 32bits by default in memory.
 
     Signed integer ranges...
 
@@ -767,3 +767,47 @@ Deferred statements that close resources will still succeed even if the applicat
 Go has a built in method called recover() which allows us to restore the normal execution of a program 
 and handle the error passed to panic. recover() catches panic errors and allows us to handle them instead
 of having a panic go all the way up to a runtime and terminate the application.
+
+
+Pointers
+--------
+
+Every variable that we declare is stored in memory in a location. Every memory location has an address,
+we can see the address for a particular variable as follows...
+
+    func main() {
+        var a int = 10   
+        fmt.Printf("Address of a variable: %x\n", &a  )
+    }
+
+Pointers are variables that have a value that is the memory address of another variable. They point to the
+direct memory address where the information is located. We can use the address of operator '&' to specify
+the pointer...
+
+    var a int = 10
+    var b *int = &a
+
+Go does not allow pointer arithmetic. Pointer arithmetic offers a lot of performance benefit but adds
+complexity. There is an unsafe Go package that offers operations that the Go runtime will not check for us.
+If we really need to do pointer arithmetic we can with this package.
+
+Example of pointer arithmetic...
+
+	c := [3]int{1, 2, 3}
+	d := &c[0]
+	e := &c[1] - 4
+	fmt.Printf("%v %p %p\n", c, d, e)
+
+    The e variable is pointing to the memory location of the second element in the c array. each int in the
+    array takes up 4 bytes in memory. By subtracting 4 from e we expect to be pointing to the c[0] memory location
+    but Go will throw an error since this is not allowed.
+
+Data types like slices make use of pointers. Slices are just projections of underlying arrays. The slice doesn't
+contain the data itself but references to the data in the underlying array. When slices are shared in our
+applications we will always be pointing at the same underlying array.
+
+    Maps also have this behavior since they just have pointers to the underlying data.
+
+    We need to always be aware of how slices and maps are being passed around and used since the data underlying
+    data that they point to can be modified in unexpected ways. With primitives, arrays, structs this isn't an
+    issue.

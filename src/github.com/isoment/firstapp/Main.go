@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
+import "fmt"
 
 /************
 * VARIABLES *
@@ -643,50 +639,99 @@ import (
 * Panic and Recover *
 ********************/
 
+// func main() {
+// 	// Panics are thrown in some instances like in this case dividing an int by 0
+// 	// a, b := 1, 0
+// 	// ans := a / b
+// 	// fmt.Println(ans)
+
+// 	// We can also use the built in panic function
+// 	// fmt.Println("start")
+// 	// panic("DANGER DANGER DANGER DANGER")
+// 	// fmt.Println("end")
+
+// 	// initServer()
+
+// 	// Even though there was a panic in the panicker() function we can still continue execution
+// 	// here. When recovering from a panic the function that recovers() can no longer continue but functions
+// 	// higher up the call stack can still continue.
+// 	fmt.Println("start")
+// 	panicker()
+// 	fmt.Println("end")
+// }
+
+// // Start up a http server that listens on port 8080. If there is an error listening on this port panic.
+// func initServer() {
+// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+// 		w.Write([]byte("Hello Go!"))
+// 	})
+// 	err := http.ListenAndServe(":8080", nil)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// }
+
+// // We can recover from a panic in this function and output the error. The last Print statement here will
+// // not execute. We can create an anonymous defer function that calls recover. The result is that the panic
+// // in this function is handled and the application can continue running outside of this function.
+// func panicker() {
+// 	fmt.Println("about to panic")
+// 	defer func() {
+// 		if err := recover(); err != nil {
+// 			log.Println("Error:", err)
+// 			// We can also panic again to halt the application if it is a fatal error
+// 			// panic(err)
+// 		}
+// 	}()
+// 	panic("something bad happened")
+// 	fmt.Println("done panicking")
+// }
+
+/***********
+* Pointers *
+***********/
+
+type myStruct struct {
+	foo int
+}
+
 func main() {
-	// Panics are thrown in some instances like in this case dividing an int by 0
-	// a, b := 1, 0
-	// ans := a / b
-	// fmt.Println(ans)
+	// var a int = 10
+	// // This is the long form way of declaring a pointer with type, *int specifies that we are declaring
+	// // a pointer to a value of that type.
+	// var b *int = &a
+	// fmt.Println(a, b)
+	// // In this case *b is the dereferencing operator. This instructs the runtime to follow the pointer to
+	// // the memory location and get the value.
+	// fmt.Println(&a, *b)
+	// a = 27
+	// fmt.Println(a, *b)
+	// *b = 14
+	// fmt.Println(a, *b)
 
-	// We can also use the built in panic function
-	// fmt.Println("start")
-	// panic("DANGER DANGER DANGER DANGER")
-	// fmt.Println("end")
+	// We can see that when getting the memory addresses of elements of the array that there are
+	c := [3]int{1, 2, 3}
+	d := &c[0]
+	e := &c[1]
+	fmt.Printf("%v %p %p\n", c, d, e)
 
-	// initServer()
+	// ms will hold the address of an object that has a field with a value of 40
+	var ms *myStruct = &myStruct{foo: 40}
+	fmt.Println(ms)
 
-	// Even though there was a panic in the panicker() function we can still continue execution
-	// here. When recovering from a panic the function that recovers() can no longer continue but functions
-	// higher up the call stack can still continue.
-	fmt.Println("start")
-	panicker()
-	fmt.Println("end")
-}
+	fmt.Println("BREAK")
 
-// Start up a http server that listens on port 8080. If there is an error listening on this port panic.
-func initServer() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello Go!"))
-	})
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err.Error())
-	}
-}
-
-// We can recover from a panic in this function and output the error. The last Print statement here will
-// not execute. We can create an anonymous defer function that calls recover. The result is that the panic
-// in this function is handled and the application can continue running outside of this function.
-func panicker() {
-	fmt.Println("about to panic")
-	defer func() {
-		if err := recover(); err != nil {
-			log.Println("Error:", err)
-			// We can also panic again to halt the application if it is a fatal error
-			// panic(err)
-		}
-	}()
-	panic("something bad happened")
-	fmt.Println("done panicking")
+	// The new() function can be used to initialize an empty object but we cannot initialize any of the values
+	// using the object initialization syntax. We can see when using new that the default empty values for the
+	// type are used. Another thing to notice is that when we declare the pointer before initializing
+	// it has a nil value. When accepting pointers as arguments we should be checking if they point to nil. When
+	// dereferencing a field on a struct we need to wrap the dereferencing operator like... (*ms2).foo
+	var ms2 *myStruct
+	fmt.Println(ms2)
+	ms2 = new(myStruct)
+	// This is equivalent to...
+	// (*ms2).foo = 52
+	// This...
+	ms2.foo = 52
+	fmt.Println(ms2.foo)
 }
