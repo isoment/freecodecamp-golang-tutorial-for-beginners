@@ -728,3 +728,42 @@ in a last in first out order.
     }
 
     When we defer a function it will take any of its arguments at the time the defer is called.
+
+
+Panic and Recover
+-----------------
+
+There are no exceptions in Go. A lot of cases that are considered exceptions in other languages are considered
+normal in a Go application. Ie opening a file.
+
+    We usually use errors to handle what would be considered exceptions in other languages.
+
+Panics happen when a Go application cannot figure out what to do and therefor cannot continue. Go lets us
+determine when the application should panic. Many Go functions return error values under certain circumstances and 
+it is up to us how we want to deal with them.
+
+Panics do not have to be fatal. They are if they get all the way up to the Go runtime since then the application
+will be killed. Panics happen after defer statements are executed...
+
+    func main() {
+        fmt.Println("start")
+        defer fmt.Println("DEFER")
+        panic("DANGER DANGER DANGER DANGER")
+        fmt.Println("end")
+    }
+
+    The order of execution...
+
+        The main function is executed, and we see "start" printed.
+
+        Then any deferred statements are executed.
+
+        Then panics are handled.
+
+        Then the return value is handled.
+
+Deferred statements that close resources will still succeed even if the application panics.
+
+Go has a built in method called recover() which allows us to restore the normal execution of a program 
+and handle the error passed to panic. recover() catches panic errors and allows us to handle them instead
+of having a panic go all the way up to a runtime and terminate the application.
