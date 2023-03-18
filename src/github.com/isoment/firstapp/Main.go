@@ -500,68 +500,101 @@ import "fmt"
 * Looping *
 **********/
 
+// func main() {
+// 	// Create a basic loop to increment by 1
+// 	for i := 0; i < 5; i = i + 1 {
+// 		fmt.Println(i)
+// 		if i%2 == 0 {
+// 			// Divide i by 2 and assign back to i
+// 			i /= 2
+// 		} else {
+// 			i = 2*i + 1
+// 		}
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// To create a loop with multiple pointers
+// 	for i, j := 0, 0; i < 5; i, j = i+1, j+2 {
+// 		fmt.Println(i, j)
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// A do while loop equivalent
+// 	count := 0
+// 	for count < 5 {
+// 		fmt.Println(count)
+// 		count++
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// An infinite for loop with a break statement, this will break out of the loop completely.
+// 	h := 0
+// 	for {
+// 		fmt.Println(h)
+// 		h++
+// 		if h == 5 {
+// 			break
+// 		}
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// The continue keyword will break out of the current iteration of the loop but continue
+// 	// to the next one.
+// 	for i := 0; i < 5; i++ {
+// 		if i%2 == 0 {
+// 			continue
+// 		}
+// 		fmt.Println(i)
+// 	}
+
+// 	fmt.Println("BREAK")
+
+// 	// A nested loop, we can use a label to break out of both loops. We define the label before the loop
+// 	// we want to break out of. If we did not use the label we would only be breaking out of the inner loop.
+// Loop:
+// 	for i := 1; i <= 3; i++ {
+// 		for j := 1; j <= 3; j++ {
+// 			fmt.Println(i * j)
+// 			if i*j >= 3 {
+// 				break Loop
+// 			}
+// 		}
+// 	}
+// }
+
+/**********************
+* Looping Collections *
+**********************/
+
 func main() {
-	// Create a basic loop to increment by 1
-	for i := 0; i < 5; i = i + 1 {
-		fmt.Println(i)
-		if i%2 == 0 {
-			// Divide i by 2 and assign back to i
-			i /= 2
-		} else {
-			i = 2*i + 1
-		}
+	// Looping over a slice, k is key and v is value
+	s := []int{1, 2, 3}
+	for k, v := range s {
+		fmt.Println(k, v)
 	}
 
 	fmt.Println("BREAK")
 
-	// To create a loop with multiple pointers
-	for i, j := 0, 0; i < 5; i, j = i+1, j+2 {
-		fmt.Println(i, j)
+	// Looping over a map
+	townPopulations := map[string]int{
+		"Faketown":  7434,
+		"Fakeville": 420012,
+		"Fakeburg":  472384,
+		"Fakeglenn": 9182,
+	}
+	for k, v := range townPopulations {
+		fmt.Println(k, v)
 	}
 
 	fmt.Println("BREAK")
 
-	// A do while loop equivalent
-	count := 0
-	for count < 5 {
-		fmt.Println(count)
-		count++
-	}
-
-	fmt.Println("BREAK")
-
-	// An infinite for loop with a break statement, this will break out of the loop completely.
-	h := 0
-	for {
-		fmt.Println(h)
-		h++
-		if h == 5 {
-			break
-		}
-	}
-
-	fmt.Println("BREAK")
-
-	// The continue keyword will break out of the current iteration of the loop but continue
-	// to the next one.
-	for i := 0; i < 5; i++ {
-		if i%2 == 0 {
-			continue
-		}
-		fmt.Println(i)
-	}
-
-	fmt.Println("BREAK")
-
-	// A nested loop, we can use a label to break out of both loops. We define the label before the loop
-	// we want to break out of. If we did not use the label we would only be breaking out of the inner loop.
-Loop:
-	for i := 1; i <= 3; i++ {
-		for j := 1; j <= 3; j++ {
-			fmt.Println(i * j)
-			if i*j >= 3 {
-				break Loop
-			}
-		}
+	// Looping over a string, and only getting the value
+	myString := "This it1!名"
+	for _, v := range myString {
+		fmt.Println(string(v), v)
 	}
 }
