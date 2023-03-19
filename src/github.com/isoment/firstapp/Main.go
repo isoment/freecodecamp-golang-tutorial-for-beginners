@@ -691,47 +691,111 @@ import "fmt"
 * Pointers *
 ***********/
 
-type myStruct struct {
-	foo int
-}
+// type myStruct struct {
+// 	foo int
+// }
+
+// func main() {
+// 	// var a int = 10
+// 	// // This is the long form way of declaring a pointer with type, *int specifies that we are declaring
+// 	// // a pointer to a value of that type.
+// 	// var b *int = &a
+// 	// fmt.Println(a, b)
+// 	// // In this case *b is the dereferencing operator. This instructs the runtime to follow the pointer to
+// 	// // the memory location and get the value.
+// 	// fmt.Println(&a, *b)
+// 	// a = 27
+// 	// fmt.Println(a, *b)
+// 	// *b = 14
+// 	// fmt.Println(a, *b)
+
+// 	// We can see that when getting the memory addresses of elements of the array that there are
+// 	c := [3]int{1, 2, 3}
+// 	d := &c[0]
+// 	e := &c[1]
+// 	fmt.Printf("%v %p %p\n", c, d, e)
+
+// 	// ms will hold the address of an object that has a field with a value of 40
+// 	var ms *myStruct = &myStruct{foo: 40}
+// 	fmt.Println(ms)
+
+// 	fmt.Println("BREAK")
+
+// 	// The new() function can be used to initialize an empty object but we cannot initialize any of the values
+// 	// using the object initialization syntax. We can see when using new that the default empty values for the
+// 	// type are used. Another thing to notice is that when we declare the pointer before initializing
+// 	// it has a nil value. When accepting pointers as arguments we should be checking if they point to nil. When
+// 	// dereferencing a field on a struct we need to wrap the dereferencing operator like... (*ms2).foo
+// 	var ms2 *myStruct
+// 	fmt.Println(ms2)
+// 	ms2 = new(myStruct)
+// 	// This is equivalent to...
+// 	// (*ms2).foo = 52
+// 	// This...
+// 	ms2.foo = 52
+// 	fmt.Println(ms2.foo)
+// }
+
+/************
+* Functions *
+************/
 
 func main() {
-	// var a int = 10
-	// // This is the long form way of declaring a pointer with type, *int specifies that we are declaring
-	// // a pointer to a value of that type.
-	// var b *int = &a
-	// fmt.Println(a, b)
-	// // In this case *b is the dereferencing operator. This instructs the runtime to follow the pointer to
-	// // the memory location and get the value.
-	// fmt.Println(&a, *b)
-	// a = 27
-	// fmt.Println(a, *b)
-	// *b = 14
-	// fmt.Println(a, *b)
+	// for i := 0; i < 5; i++ {
+	// 	message("Hello There", i)
+	// }
 
-	// We can see that when getting the memory addresses of elements of the array that there are
-	c := [3]int{1, 2, 3}
-	d := &c[0]
-	e := &c[1]
-	fmt.Printf("%v %p %p\n", c, d, e)
+	// greeting := "Hello"
+	// name := "Stanley"
+	// greetPerson(&greeting, &name)
+	// fmt.Println(name)
 
-	// ms will hold the address of an object that has a field with a value of 40
-	var ms *myStruct = &myStruct{foo: 40}
-	fmt.Println(ms)
+	// s := sum(1, 2, 3, 4)
+	// fmt.Println("The sum is", *s)
 
-	fmt.Println("BREAK")
+	// v, err := divide(5.0, 2.0)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println(v)
 
-	// The new() function can be used to initialize an empty object but we cannot initialize any of the values
-	// using the object initialization syntax. We can see when using new that the default empty values for the
-	// type are used. Another thing to notice is that when we declare the pointer before initializing
-	// it has a nil value. When accepting pointers as arguments we should be checking if they point to nil. When
-	// dereferencing a field on a struct we need to wrap the dereferencing operator like... (*ms2).foo
-	var ms2 *myStruct
-	fmt.Println(ms2)
-	ms2 = new(myStruct)
-	// This is equivalent to...
-	// (*ms2).foo = 52
-	// This...
-	ms2.foo = 52
-	fmt.Println(ms2.foo)
+	b := func() {
+		fmt.Println("Hello Go!")
+	}
+	b()
+}
+
+func message(msg string, index int) {
+	fmt.Println(msg, index)
+}
+
+// If the params are the same type we can specify the type only on the last argument. When passing in pointers we
+// can modify the original parameter variable from within the function. With large data structures this can greatly
+// improve performance. Maps and slices don't have this option since they are already just pointers to the underlying
+// data structure.
+func greetPerson(greeting, name *string) {
+	fmt.Println(*greeting, *name)
+	*name = "Ted"
+	fmt.Println(*name)
+}
+
+// Functions can accept variadic parameters. The ... operator tells the Go runtime to take all the parameters and
+// wrap them into a slice. There can only be on variadic param and it has to be the last one.
+func sum(values ...int) *int {
+	fmt.Println(values)
+	result := 0
+	for _, v := range values {
+		result += v
+	}
+	return &result
+}
+
+// Functions can have multiple return values. This is especially useful for returning errors. The error is the
+// second return type for this function. We want to do the error checking early on in the function.
+func divide(a, b float64) (float64, error) {
+	if b == 0.0 {
+		return 0.0, fmt.Errorf("Cannot divide by zero")
+	}
+	return a / b, nil
 }

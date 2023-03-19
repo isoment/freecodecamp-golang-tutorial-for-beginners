@@ -811,3 +811,86 @@ applications we will always be pointing at the same underlying array.
     We need to always be aware of how slices and maps are being passed around and used since the data underlying
     data that they point to can be modified in unexpected ways. With primitives, arrays, structs this isn't an
     issue.
+
+
+Functions
+---------
+
+Just like in other languages functions are bits of reusable code. The entry of every Go application is
+the main() function that takes no parameters and returns no values.
+
+Go has a feature not common in other languages, return types from functions can be pointers. This allows us
+to return a function scoped variable as a pointer. We are returning the memory address of the value and not
+the actual value itself.
+
+	s := sum(1, 2, 3, 4)
+	fmt.Println("The sum is", *s)
+
+    func sum(values ...int) *int {
+        fmt.Println(values)
+        result := 0
+        for _, v := range values {
+            result += v
+        }
+        return &result
+    }
+
+Returning pointers in other languages can be problematic because once the function executes the value in memory
+that the function creates is freed up and the pointer could be pointing to a location that was freed and there is
+no way to know which value will be there. In Go when a pointer is returned it will make sure that the value
+in memory is pushed onto the shared heap memory so when we use the pointer we can be sure that it is referencing
+the correct value.
+
+In Go functions can have named return values, the named value will be available within our function and is 
+implicitly returned. This isn't used very frequently.
+
+	s := sum(1, 2, 3, 4)
+	fmt.Println("The sum is", s)
+
+    func sum(values ...int) (result int) {
+        fmt.Println(values)
+        for _, v := range values {
+            result += v
+        }
+        return
+    }
+
+Go functions can have multiple return values! See code example
+
+Functions in go can be treated as types. They can be passed as parameters to functions, given as return values etc.
+
+Go supports anonymous functions, these are not very useful except for maybe limiting variable scope.
+
+	func() {
+		fmt.Println("Hello Go!")
+	}()
+
+When working with functions as variables we need to make sure that they are defined before we execute them
+
+	b := func() {
+		fmt.Println("Hello Go!")
+	}
+	b()
+
+Go also has methods. A method os just a function executing in a known context. A known context in Go is any type.
+Structs are commonly used but we can add methods to any declared type.
+
+    func main() {
+        g := greeter{
+            greeting: "Hello",
+            name: "Go"
+        }
+        g.greet()
+    }
+
+    type greeter struct {
+        greeting string
+        name string
+    }
+
+    // This is where we provide the context that the method executes in. We can see in the main() function that
+    // we can now call greet on the greeter struct. If we want to manipulate the original struct we can modify
+    // the example to receive a pointer (g *greeter)
+    func (g greeter) greet() {
+        fmt.Println(g.greeting, g.name)
+    }
