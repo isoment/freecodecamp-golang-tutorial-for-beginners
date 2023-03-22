@@ -894,3 +894,95 @@ Structs are commonly used but we can add methods to any declared type.
     func (g greeter) greet() {
         fmt.Println(g.greeting, g.name)
     }
+
+
+Interfaces
+----------
+
+We have already seen how structs are used to define and store data. Interfaces define behavior. A sample interface...
+
+    type Writer interface {
+        Write([]byte) (int, error)
+    }
+
+    Anything that implements the interface above must accept a slice of bytes as an input and return an int and
+    error.
+
+Interfaces in many languages are explicitly implemented. The interface must be defined before it is implemented. In Go
+interfaces are implicit, we don't need to create interfaces until we need them.
+
+Single method interfaces are very common and should be named with the 'er suffix if at all possible.
+
+Any type that can have a method associated with it can implement an interface.
+
+    type Incrementor interface {
+        Increment() int
+    }
+
+    type IntCounter int
+
+    func (ic *IntCounter) Increment() int {
+        *ic++
+        return int(*ic)
+    }
+
+Interfaces can be embedded in other interfaces...
+
+    type Writer interface {
+        Write([]byte) (int, error)
+    }
+
+    type Closer interface {
+        Close() error
+    }
+
+    type WriterCloser interface {
+        Writer
+        Closer
+    }
+
+Go allows us to convert interfaces just like we can convert other types. Below we are trying to convert the wc
+variable to an io.Reader. In this case we cannot convert because io.Reader does not have a read method so we need
+to account for this...
+
+    var wc WriterCloser = NewBufferedWriterCloser()
+
+    r, ok:= wc.(io.Reader)
+    if ok {
+        fmt.Println(r)
+    } else {
+        fmt.Println("Conversion failed")
+    }
+
+An interface can be empty, ie an object with no methods on it. Everything can be cast to this including primitives.
+This is useful as an intermediate step, we receive a value and need to do some steps to determine what it is. Every
+type in Go implements the empty interface!
+
+    interface{}
+
+    The empty interface is often used with a type switch.
+
+There are some useful best practices when it comes to interfaces...
+
+    It is better to use numerous small interfaces than few very large ones. Some of the interfaces in the
+    standard library to take a look at...
+
+        io.Writer
+        io.Reader
+        interface{}
+
+    Don't export interfaces for types that will be consumed. Do export interfaces for types that you will be consuming. 
+    If we don't need the interface for our own use don't export it instead export the concrete type. If we were to 
+    create a library we can specify the interfaces we accept and the user can define them however they want.
+
+        Export concrete types and accept interfaces whenever possible.
+
+        Design functions and methods to receive interfaces whenever possible.
+
+There a differences when implementing an interface with values vs pointers.
+
+    The method set of value is all methods with value receiver. If we implement an interface with value types
+    all the methods of the interface must have value receivers.
+
+    The method set of of pointer is all methods regardless of receiver type, all of the value AND pointer receivers.
+    This is more flexible but allows access to the underlying data through the pointer.

@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /************
 * VARIABLES *
@@ -740,62 +742,126 @@ import "fmt"
 * Functions *
 ************/
 
+// func main() {
+// 	// for i := 0; i < 5; i++ {
+// 	// 	message("Hello There", i)
+// 	// }
+
+// 	// greeting := "Hello"
+// 	// name := "Stanley"
+// 	// greetPerson(&greeting, &name)
+// 	// fmt.Println(name)
+
+// 	// s := sum(1, 2, 3, 4)
+// 	// fmt.Println("The sum is", *s)
+
+// 	// v, err := divide(5.0, 2.0)
+// 	// if err != nil {
+// 	// 	fmt.Println(err)
+// 	// 	return
+// 	// }
+// 	// fmt.Println(v)
+
+// 	b := func() {
+// 		fmt.Println("Hello Go!")
+// 	}
+// 	b()
+// }
+
+// func message(msg string, index int) {
+// 	fmt.Println(msg, index)
+// }
+
+// // If the params are the same type we can specify the type only on the last argument. When passing in pointers we
+// // can modify the original parameter variable from within the function. With large data structures this can greatly
+// // improve performance. Maps and slices don't have this option since they are already just pointers to the underlying
+// // data structure.
+// func greetPerson(greeting, name *string) {
+// 	fmt.Println(*greeting, *name)
+// 	*name = "Ted"
+// 	fmt.Println(*name)
+// }
+
+// // Functions can accept variadic parameters. The ... operator tells the Go runtime to take all the parameters and
+// // wrap them into a slice. There can only be on variadic param and it has to be the last one.
+// func sum(values ...int) *int {
+// 	fmt.Println(values)
+// 	result := 0
+// 	for _, v := range values {
+// 		result += v
+// 	}
+// 	return &result
+// }
+
+// // Functions can have multiple return values. This is especially useful for returning errors. The error is the
+// // second return type for this function. We want to do the error checking early on in the function.
+// func divide(a, b float64) (float64, error) {
+// 	if b == 0.0 {
+// 		return 0.0, fmt.Errorf("Cannot divide by zero")
+// 	}
+// 	return a / b, nil
+// }
+
+/*************
+* Interfaces *
+*************/
+
+// // Example 1
+// func main() {
+// 	// Whatever we assign to w must satisfy the writer interface
+// 	var w Writer = ConsoleWriter{}
+// 	w.Write([]byte("Hello Go!"))
+// }
+
+// // Define an interface
+// type Writer interface {
+// 	Write([]byte) (int, error)
+// }
+
+// // Create a struct
+// type ConsoleWriter struct{}
+
+// // Create a Write method and attach it to the struct
+// func (cw ConsoleWriter) Write(data []byte) (int, error) {
+// 	n, err := fmt.Println(string(data))
+// 	return n, err
+// }
+
+// type SecondWriter struct{}
+
+// // Example 2, interfaces can be used with any type, not just structs.
+// func main() {
+// 	myInt := IntCounter(0)
+// 	var inc Incrementor = &myInt
+// 	for i := 0; i < 10; i++ {
+// 		fmt.Println(inc.Increment())
+// 	}
+// }
+
+// type Incrementor interface {
+// 	Increment() int
+// }
+
+// // Create a custom type
+// type IntCounter int
+
+// // Create a method for the above type, we have a pointer to the type
+// // and will increment it.
+// func (ic *IntCounter) Increment() int {
+// 	*ic++
+// 	return int(*ic)
+// }
+
+// Example 3. Type switches. This is a common use of the empty interface with type switches
+// containing logic for different possible types.
 func main() {
-	// for i := 0; i < 5; i++ {
-	// 	message("Hello There", i)
-	// }
-
-	// greeting := "Hello"
-	// name := "Stanley"
-	// greetPerson(&greeting, &name)
-	// fmt.Println(name)
-
-	// s := sum(1, 2, 3, 4)
-	// fmt.Println("The sum is", *s)
-
-	// v, err := divide(5.0, 2.0)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// fmt.Println(v)
-
-	b := func() {
-		fmt.Println("Hello Go!")
+	var i interface{} = 0
+	switch i.(type) {
+	case int:
+		fmt.Println("i is an integer")
+	case string:
+		fmt.Println("i is a string")
+	default:
+		fmt.Println("i is unknown")
 	}
-	b()
-}
-
-func message(msg string, index int) {
-	fmt.Println(msg, index)
-}
-
-// If the params are the same type we can specify the type only on the last argument. When passing in pointers we
-// can modify the original parameter variable from within the function. With large data structures this can greatly
-// improve performance. Maps and slices don't have this option since they are already just pointers to the underlying
-// data structure.
-func greetPerson(greeting, name *string) {
-	fmt.Println(*greeting, *name)
-	*name = "Ted"
-	fmt.Println(*name)
-}
-
-// Functions can accept variadic parameters. The ... operator tells the Go runtime to take all the parameters and
-// wrap them into a slice. There can only be on variadic param and it has to be the last one.
-func sum(values ...int) *int {
-	fmt.Println(values)
-	result := 0
-	for _, v := range values {
-		result += v
-	}
-	return &result
-}
-
-// Functions can have multiple return values. This is especially useful for returning errors. The error is the
-// second return type for this function. We want to do the error checking early on in the function.
-func divide(a, b float64) (float64, error) {
-	if b == 0.0 {
-		return 0.0, fmt.Errorf("Cannot divide by zero")
-	}
-	return a / b, nil
 }
