@@ -986,3 +986,136 @@ There a differences when implementing an interface with values vs pointers.
 
     The method set of of pointer is all methods regardless of receiver type, all of the value AND pointer receivers.
     This is more flexible but allows access to the underlying data through the pointer.
+
+
+Goroutines
+----------
+
+Concurrency is the applications ability to work on multiple things. This does not mean they have to run in parallel.
+It means that two or more tasks start, run and complete in overlapping time periods. Parallelism is when tasks run at 
+the same time. Imagine the following...
+
+    Concurrency can be illustrated by two lines of customers ordering from a single cashier. Each line will take
+    turns ordering. Each line of customers are the programming instructions and the cashier is the CPU core. We only
+    have one CPU core and it can only process one thing at a time despite there being multiple processes.
+
+    Parallelism is when we have a cashier (CPU core) for each line. This is only possible with multiple cores.
+
+Go used green threads for concurrency. A green thread is a thread that is scheduled by a runtime library or a virtual
+machine as opposed to the operating system. They do no rely on the hosts native abilities. Modern Go uses the
+operating system threads directly to implement goroutines.
+
+    Operating system threads have an individual function callstack dedicated to whatever code is handed to that
+    thread. These are large and take time to setup. Creating and destroying threads is expensive and we want to
+    avoid it whenever possible. Thread pooling is a result of the expensive nature of this process.
+
+    Go logical threads are abstractions of threads called goroutines. There is a scheduler in the Go runtime that
+    maps goroutines onto the operating system threads for a period of time. The scheduler does all of this
+    for us.
+
+    Goroutines are managed by the Go runtime, which multiplexes many goroutines onto a smaller number of operating 
+    system threads, using techniques such as work-stealing and preemption to efficiently schedule and 
+    manage goroutines.
+
+        The advantage of this is that goroutines can start with very small stack spaces, they can be reallocated
+        very quickly. It is very cheap to create and destroy them unlike operating system threads. Tens of
+        thousands of these can run at the same time.
+
+A basic goroutine...
+
+    func main() {
+        go sayHello()
+        time.Sleep(100 * time.Millisecond)
+    }
+
+    func sayHello() {
+        fmt.Println("Hello")
+    }
+
+Go routines do not have to be named functions. The following is valid, also note that the closure has access to
+variables in the outer scope. Even though the goroutine is running in a different execution stack the Go runtime
+understands where to get the msg variable.
+
+    var msg = "Hello"
+    go func() {
+        fmt.Println(msg)
+    }()
+
+The above code will result in a race condition. We should pass external data as an argument for use in the goroutine.
+
+    var msg = "Hello"
+    go func(msg string) {
+        fmt.Println(msg)
+    }()
+
+When working with goroutines we often need to wait for an operation to finish so we can use the data for something
+else. Go has WaitGroups which are designed to synchronize multiple goroutines together. Here we only have one
+goroutine doing any work but the syntax for working with WaitGroups is clear.
+
+    var wg = sync.WaitGroup{}
+
+    func main() {
+        var msg = "Hello"
+        wg.Add(1)
+        go func(msg string) {
+            fmt.Println(msg)
+            wg.Done()
+        }(msg)
+        msg = "Goodbye"
+        wg.Wait()
+    }
+
+    A WaitGroup waits for a collection of goroutines to finish. The main goroutine calls Add to set the number of 
+    goroutines to wait for. Then each of the goroutines runs and calls Done when finished. At the same time, Wait 
+    can be used to block until all goroutines have finished.
+
+Go has mutexes built in. A mutex is a way for us to protect shared resources from concurrent access by many
+goroutines. A mutex is like a lock that can be used to ensure that only one goroutine has access to a shared
+resource at a time.
+
+    var mutex = &sync.Mutex{}
+    var counter = 0
+
+    func increment() {
+        mutex.Lock()
+        defer mutex.Unlock()
+        counter++
+    }
+
+    The Lock() method is used to acquire the lock and the Unlock() method will release it. These are for
+    locking and unlocking writing.
+
+    In the above example we are using the mutex to protect the counter variable so only one goroutine has access to
+    it at a time. This prevents data races and synchronization issues.
+
+With a standard mutex only one thing can access the data at a time. With an RWMutex as many things as want to can read 
+the data but only one thing can be writing it at a time. If anything is reading we cannot write to it at all.
+
+	RLock() and RUnlock() lock and unlock reading.
+
+The examples we have been using to illustrate concurrency are not useful. Concurrency is not something that should
+be applied to everything and in fact applying it to unsuitable problems will often make performance worse.
+
+Get and set the max CPUs that a Go program to use at once. By default Go will create however many threads the CPU 
+provides. For example on a 4 core CPU each core has two threads so the default will be 8.
+
+    func main() {
+        runtime.GOMAXPROCS(100)
+        fmt.Printf("Threads: %v\n", runtime.GOMAXPROCS(-1))
+    }
+
+    We can increase the value beyond this though it does not always improve performance. We are telling the Go
+    runtime to create this amount of logical threads. We many only have 8 operating system threads, these are
+    not the same as Linux threads and are limited to the threads on the CPU.
+
+Some best practices for working with goroutines...
+
+    Avoid creating goroutines in libraries, let the consumer control this.
+
+    When creating a goroutine know how it will end, this will avoid subtle memory leaks. If we don't end it
+    in some way it will go on indefinitely and drain resources.
+
+    Check for race conditions at compile time. When compiling our program we can use the following. It is
+    strongly recommended to run this...
+
+        go run -race ...

@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 /************
 * VARIABLES *
 ************/
@@ -852,16 +848,120 @@ import (
 // 	return int(*ic)
 // }
 
-// Example 3. Type switches. This is a common use of the empty interface with type switches
-// containing logic for different possible types.
-func main() {
-	var i interface{} = 0
-	switch i.(type) {
-	case int:
-		fmt.Println("i is an integer")
-	case string:
-		fmt.Println("i is a string")
-	default:
-		fmt.Println("i is unknown")
-	}
-}
+// // Example 3. Type switches. This is a common use of the empty interface with type switches
+// // containing logic for different possible types.
+// func main() {
+// 	var i interface{} = 0
+// 	switch i.(type) {
+// 	case int:
+// 		fmt.Println("i is an integer")
+// 	case string:
+// 		fmt.Println("i is a string")
+// 	default:
+// 		fmt.Println("i is unknown")
+// 	}
+// }
+
+/*************
+* Goroutines *
+*************/
+
+// // A basic goroutine
+// func main() {
+// 	go sayHello()
+// 	time.Sleep(100 * time.Millisecond)
+// }
+
+// func sayHello() {
+// 	fmt.Println("Hello")
+// }
+
+/*
+Goroutines can be used with anonymous functions as well. Below we can see that Goodbye is
+printed out. This is a race condition. Most of the time the go scheduler is not going to
+interrupt the main thread until the Sleep() is hit. Even though the goroutine is launched
+the main function is still executed and msg is given the new value before msg is printed out.
+
+We can prevent this by passing in the msg variable to the anonymous function. The msg variable
+is passed in by value not reference since it is a string.
+*/
+// func main() {
+// 	var msg = "Hello"
+// 	go func(msg string) {
+// 		fmt.Println(msg)
+// 	}(msg)
+// 	msg = "Goodbye"
+// 	time.Sleep(100 * time.Millisecond)
+// }
+
+/*
+We can use WaitGroups to synchronize goroutines. Notice that the order in which the goroutines complete
+is never the same. There is no synchronization method for the goroutines.
+*/
+// var wg = sync.WaitGroup{}
+// var counter = 0
+
+// func main() {
+// 	// Spawn 20 goroutines, each iteration spawns 2 goroutines. We then call Add(2)
+// 	// telling the main goroutine we are waiting for 2 go routines to call Done()
+// 	for i := 0; i < 10; i++ {
+// 		wg.Add(2)
+// 		go sayHello()
+// 		go increment()
+// 	}
+// 	wg.Wait()
+// }
+
+// func sayHello() {
+// 	fmt.Printf("Hello #%v\n", counter)
+// 	wg.Done()
+// }
+
+// func increment() {
+// 	counter++
+// 	wg.Done()
+// }
+
+/*
+A Mutex is basically a lock that the application will honor. With a standard mutex only one thing can access
+the data at a time. With an RWMutex as many things as want to can read the data but only one thing can be writing
+it at a time. If anything is reading we cannot write to it at all.
+*/
+// var wg = sync.WaitGroup{}
+// var counter = 0
+
+// // Create a read write mutex
+// var m = sync.RWMutex{}
+
+// func main() {
+// 	runtime.GOMAXPROCS(100)
+// 	for i := 0; i < 10; i++ {
+// 		wg.Add(2)
+// 		m.RLock()
+// 		go sayHello()
+// 		m.Lock()
+// 		go increment()
+// 	}
+// 	wg.Wait()
+// }
+
+// func sayHello() {
+// 	fmt.Printf("Hello #%v\n", counter)
+// 	m.RUnlock()
+// 	wg.Done()
+// }
+
+// func increment() {
+// 	counter++
+// 	m.Unlock()
+// 	wg.Done()
+// }
+
+/*
+Get and set the max CPUs that a Go program to use at once.
+*/
+// func main() {
+// 	// Set and print the threads Go uses
+// 	runtime.GOMAXPROCS(100)
+// 	fmt.Printf("Threads: %v\n", runtime.GOMAXPROCS(-1))
+// }
