@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
 /************
 * VARIABLES *
 ************/
@@ -965,3 +970,101 @@ Get and set the max CPUs that a Go program to use at once.
 // 	runtime.GOMAXPROCS(100)
 // 	fmt.Printf("Threads: %v\n", runtime.GOMAXPROCS(-1))
 // }
+
+/***********
+* Channels *
+***********/
+
+/*
+In the main function below the first goroutine is receiving data from
+the channel. The second function is the sending go routine.
+
+Data passed into the channel is a copy of the data
+*/
+var wg = sync.WaitGroup{}
+
+// func main() {
+// 	ch := make(chan int)
+// 	wg.Add(2)
+// 	go func() {
+// 		// Receive data from the channel and assign it to the variable i
+// 		i := <-ch
+// 		fmt.Println(i)
+// 		wg.Done()
+// 	}()
+// 	go func() {
+// 		// Send the value 42 through the channel
+// 		i := 42
+// 		ch <- i
+// 		i = 543
+// 		wg.Done()
+// 	}()
+// 	wg.Wait()
+// }
+
+/*
+The second goroutine is sending 42 into the channel 5 times.
+*/
+// func main() {
+// 	ch := make(chan int)
+// 	for j := 0; j < 5; j++ {
+// 		wg.Add(2)
+// 		go func() {
+// 			i := <-ch
+// 			fmt.Println(i)
+// 			wg.Done()
+// 		}()
+// 		go func() {
+// 			ch <- 42
+// 			wg.Done()
+// 		}()
+// 	}
+// 	wg.Wait()
+// }
+
+/*
+Multiple goroutines can push messages into a channel. The second goroutine is pushing a message
+into the channel with a value of 42 and it is printed out. 27 is then put back into the channel
+which is received in the second goroutine and printed out.
+
+Both of the goroutines are acting as readers and writers.
+*/
+// func main() {
+// 	ch := make(chan int)
+// 	wg.Add(2)
+// 	go func() {
+// 		i := <-ch
+// 		fmt.Println(i)
+// 		ch <- 27
+// 		wg.Done()
+// 	}()
+// 	go func() {
+// 		ch <- 42
+// 		fmt.Println(<-ch)
+// 		wg.Done()
+// 	}()
+
+// 	wg.Wait()
+// }
+
+/*
+More often than not we want to have a goroutine either reading from a channel or writing to a
+channel but not both. To do this we can pass in the channel as an argument to the goroutine.
+*/
+func main() {
+	ch := make(chan int)
+	wg.Add(2)
+	// A receive only channel
+	go func(ch <-chan int) {
+		i := <-ch
+		fmt.Println(i)
+		wg.Done()
+	}(ch)
+	// A send only channel
+	go func(ch chan<- int) {
+		ch <- 42
+		wg.Done()
+	}(ch)
+
+	wg.Wait()
+}

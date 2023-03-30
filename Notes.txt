@@ -1119,3 +1119,37 @@ Some best practices for working with goroutines...
     strongly recommended to run this...
 
         go run -race ...
+
+
+Channels
+--------
+
+Most programming languages were designed under the assumption they would be used on a machine with a single 
+processing core. Go was built later when multi-core processors were commonplace.
+
+As we saw in the previous session goroutines are abstractions that make it easier to work concurrently but
+there are some issues like race conditions and memory sharing problems.
+
+    Go introduces a feature called Channels that can address the above issues.
+
+Channels are used in the context of goroutines. They are used to synchronize data transmission between multiple
+goroutines.
+
+To create a channel we need to use the make() function. We have seen this function being used to create maps
+and slices. With those types there were multiple ways to create them but with channels we need to use make().
+
+When creating a channel it can only accept messages of a certain type, for example the following will only accept
+int values.
+
+    make(chan int)
+
+A channel can be either buffered or unbuffered. A buffered channel can only contain a single item at a time.
+When we send a value into an unbuffered channel will block the channel until another goroutine receives the
+value.
+
+    A buffered channel can hold a fixed number of items which is defined when the channel is created.
+
+    The order of items in a channel is preserved.
+
+Go routines are commonly used for asynchronous operations. When using channels we can have multiple goroutines
+sending data into a channel.
