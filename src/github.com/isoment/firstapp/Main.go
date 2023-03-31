@@ -1051,20 +1051,44 @@ Both of the goroutines are acting as readers and writers.
 More often than not we want to have a goroutine either reading from a channel or writing to a
 channel but not both. To do this we can pass in the channel as an argument to the goroutine.
 */
+// func main() {
+// 	ch := make(chan int)
+// 	wg.Add(2)
+// 	// A receive only channel
+// 	go func(ch <-chan int) {
+// 		i := <-ch
+// 		fmt.Println(i)
+// 		wg.Done()
+// 	}(ch)
+// 	// A send only channel
+// 	go func(ch chan<- int) {
+// 		ch <- 42
+// 		wg.Done()
+// 	}(ch)
+// 	wg.Wait()
+// }
+
+/*
+A buffered channel
+*/
 func main() {
-	ch := make(chan int)
+	ch := make(chan int, 50)
 	wg.Add(2)
-	// A receive only channel
+	// A receive only channel. We use a for rance loop on the channel. When looping over a
+	// channel it will loop forever since there can be an infinite number of elements in it.
 	go func(ch <-chan int) {
-		i := <-ch
-		fmt.Println(i)
+		for i := range ch {
+			fmt.Println(i)
+		}
 		wg.Done()
 	}(ch)
-	// A send only channel
+	// A send only channel. We need to close the channel manually since we are using the for
+	// range loop in the above go routine.
 	go func(ch chan<- int) {
 		ch <- 42
+		ch <- 52
+		close(ch)
 		wg.Done()
 	}(ch)
-
 	wg.Wait()
 }

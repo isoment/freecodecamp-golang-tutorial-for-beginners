@@ -1148,8 +1148,35 @@ When we send a value into an unbuffered channel will block the channel until ano
 value.
 
     A buffered channel can hold a fixed number of items which is defined when the channel is created.
+    To create a buffered channel...
+
+        ch := make(chan int, 50)
+
+        Buffered channels are designed for when either the sender or the receiver needs more time to process
+        the information coming from the other side.
 
     The order of items in a channel is preserved.
 
 Go routines are commonly used for asynchronous operations. When using channels we can have multiple goroutines
 sending data into a channel.
+
+We can close a channel using close(), we need to make sure that nothing is being sent into the channel
+or else Go will panic.
+
+    func main() {
+        ch := make(chan int, 50)
+        wg.Add(2)
+        go func(ch <-chan int) {
+            for i := range ch {
+                fmt.Println(i)
+            }
+            wg.Done()
+        }(ch)
+        go func(ch chan<- int) {
+            ch <- 42
+            ch <- 52
+            close(ch)
+            wg.Done()
+        }(ch)
+        wg.Wait()
+    }
