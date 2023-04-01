@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 /************
@@ -1071,24 +1072,66 @@ channel but not both. To do this we can pass in the channel as an argument to th
 /*
 A buffered channel
 */
+// func main() {
+// 	ch := make(chan int, 50)
+// 	wg.Add(2)
+// 	// A receive only channel. We use a for rance loop on the channel. When looping over a
+// 	// channel it will loop forever since there can be an infinite number of elements in it.
+// 	go func(ch <-chan int) {
+// 		for i := range ch {
+// 			fmt.Println(i)
+// 		}
+// 		wg.Done()
+// 	}(ch)
+// 	// A send only channel. We need to close the channel manually since we are using the for
+// 	// range loop in the above go routine.
+// 	go func(ch chan<- int) {
+// 		ch <- 42
+// 		ch <- 52
+// 		close(ch)
+// 		wg.Done()
+// 	}(ch)
+// 	wg.Wait()
+// }
+
+/*
+Using a select statement to shut down a goroutine
+*/
+const (
+	logInfo    = "INFO"
+	logWarning = "WARNING"
+	logError   = "ERROR"
+)
+
+type logEntry struct {
+	time     time.Time
+	severity string
+	message  string
+}
+
+var logCh = make(chan logEntry, 50)
+
+// A struct with no field requires no memory allocation, this produces a signal only
+// channel.
+var doneCh = make(chan struct{})
+
 func main() {
-	ch := make(chan int, 50)
-	wg.Add(2)
-	// A receive only channel. We use a for rance loop on the channel. When looping over a
-	// channel it will loop forever since there can be an infinite number of elements in it.
-	go func(ch <-chan int) {
-		for i := range ch {
-			fmt.Println(i)
+	go logger()
+	logCh <- logEntry{time.Now(), logInfo, "App is starting"}
+	logCh <- logEntry{time.Now(), logInfo, "App is shutting down"}
+	time.Sleep(100 * time.Millisecond)
+	// Create an empty struct and pass it into the doneCh to signal we want the logger to shut down.
+	doneCh <- struct{}{}
+}
+
+func logger() {
+	for {
+		// The select statement is waiting for communication to occur on one of the channels.
+		select {
+		case entry := <-logCh:
+			fmt.Printf("%v - [%v]%v\n", entry.time.Format("2006-01-02T15:04:05"), entry.severity, entry.message)
+		case <-doneCh:
+			break
 		}
-		wg.Done()
-	}(ch)
-	// A send only channel. We need to close the channel manually since we are using the for
-	// range loop in the above go routine.
-	go func(ch chan<- int) {
-		ch <- 42
-		ch <- 52
-		close(ch)
-		wg.Done()
-	}(ch)
-	wg.Wait()
+	}
 }

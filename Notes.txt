@@ -1157,8 +1157,24 @@ value.
 
     The order of items in a channel is preserved.
 
+Channels are by default bi-directional. We can create channels that are either send only or receive only.
+
+    Send only...
+
+        ch chan<- int
+
+    Receive only...
+
+        ch <-chan int
+
 Go routines are commonly used for asynchronous operations. When using channels we can have multiple goroutines
 sending data into a channel.
+
+    One channel can be distributed among multiple goroutines. There can be multiple data generators sending data
+    into the channel.
+
+    In a situation where we are able to generate data very fast but need more time to process it we can have a
+    single goroutine sending data through a channel to multiple goroutines.
 
 We can close a channel using close(), we need to make sure that nothing is being sent into the channel
 or else Go will panic.
@@ -1180,3 +1196,22 @@ or else Go will panic.
         }(ch)
         wg.Wait()
     }
+
+The select statement is waiting for communication to occur on one of the channels. When a value is received from
+logCh we will print the log, when a signal is sent from the doneCh the loop is broken.
+
+    for {
+        select {
+        case entry := <-logCh:
+            fmt.Printf("%v - [%v]%v\n", entry.time.Format("2006-01-02T15:04:05"), entry.severity, entry.message)
+        case <-doneCh:
+            break
+        }
+    }
+
+A select statement chooses the first channel that is ready to communicate, i.e., the one that has a value ready 
+to be received or the one that is ready to receive a value. If multiple channels are ready, then one of 
+them is chosen randomly. The ordering of the case statements does not matter.
+
+Select statements can be used in various scenarios where multiple channels are involved, such as waiting for 
+data from multiple sources, coordinating multiple concurrent operations, and managing timeouts or cancellation of operations.
